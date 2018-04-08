@@ -4,7 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-
+use App\Models\Projeto;
 use App\Models\Relatorio\Coordenador;
 use App\Models\Relatorio\Cronograma;
 use App\Models\Relatorio\EquipeRelatorio;
@@ -171,5 +171,56 @@ class Relatorio extends Model
         } catch(QueryException $e) {
 
         }
+    }
+
+    /*** RELATIONSHIPS */
+    public function getProjeto()
+    {
+        return $this->hasOne(Projeto::class);
+    } 
+
+    public function getCoordenador()
+    {
+        return $this->hasMany(Coordenador::class);
+    }
+
+    public function getCronograma()
+    {
+        return $this->hasMany(Cronograma::class);
+    }
+
+    public function getEquipeRelatorio()
+    {
+        return $this->hasMany(EquipeRelatorio::class);
+    }
+
+    public function getExpositor()
+    {
+        return $this->hasMany(Expositor::class);
+    }
+
+    public function getMinistrante()
+    {
+        return $this->hasMany(Ministrante::class);
+    }
+
+    public function getMonitor()
+    {
+        return $this->hasMany(Monitor::class);
+    }
+
+    public function getOuvinte()
+    {
+        return $this->hasMany(Ouvinte::class);
+    }
+
+    public function getPalestrante()
+    {
+        return $this->hasMany(Palestrante::class);
+    }
+
+    public function getParticipante()
+    {
+        return $this->hasMany(Participante::class);
     }
 }

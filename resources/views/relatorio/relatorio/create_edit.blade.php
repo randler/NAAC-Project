@@ -7,7 +7,7 @@
       <div class="row">
         <div class="col-md-12"> <i class="far fa-4x fa-file"></i>
           @if (isset($editarRelatorio))
-            <h1 class="text-center display-3">Editar Relatório - {{$editarRelatorio->titulo_projeto}}</h1>
+            <h1 class="text-center display-3">Editar Relatório - {{$editarRelatorio->titulo}}</h1>
           @else
             <h1 class="text-center display-3">Novo Relatório</h1>
           @endif
@@ -45,7 +45,7 @@
       <div class="row">
         <div class="col-md-12">
           @if (isset($editarRelatorio))
-            {!! Form::model($editarRelatorio, ['route' => ['update-correcao-projeto', $editarRelatorio->id], 'class' => 'form', 'method' => 'PUT']) !!}
+            {!! Form::model($editarRelatorio, ['route' => ['update-correcao-relatorio', $editarRelatorio->id], 'class' => 'form', 'method' => 'PUT']) !!}
           @else
             {!! Form::open(['route' => 'salvar-relatorio', 'class' => 'form', 'id' => 'form-projeto'])!!}
           @endif 
@@ -167,13 +167,12 @@
                                 </tr>
                               </thead>
                               <tbody>
-                                @if (isset($dadosProject))
-                                  @foreach($dadosProject->getEquipe as $equipe)
+                                @if (isset($editarRelatorio))
+                                  @foreach($editarRelatorio->getCronograma as $cronograma)
                                     <tr>
                                       <td>{{$loop->iteration}}</td>
-                                      <td>{{$equipe->nome}}</td>
-                                      <td>{{$equipe->email}}</td>
-                                      <td>{{$equipe->telefone}}</td>
+                                      <td>{{$cronograma->desc_atividade}}</td>
+                                      <td>{{$cronograma->data}}</td>
                                       <td><i class='fa fa-trash text-danger' onClick='remover({{$loop->iteration}}, "table-cronograma" )'></i></td>
                                     </tr>
                                   @endforeach
@@ -228,13 +227,12 @@
                                 </tr>
                               </thead>
                               <tbody>
-                                @if (isset($dadosProject))
-                                  @foreach($dadosProject->getEquipe as $equipe)
+                                @if (isset($editarRelatorio))
+                                  @foreach($editarRelatorio->getCoordenador as $coordenador)
                                     <tr>
                                       <td>{{$loop->iteration}}</td>
-                                      <td>{{$equipe->nome}}</td>
-                                      <td>{{$equipe->email}}</td>
-                                      <td>{{$equipe->telefone}}</td>
+                                      <td>{{$coordenador->nome}}</td>
+                                      <td>{{$coordenador->carga_horaria}}</td>
                                       <td><i class='fa fa-trash text-danger' onClick='remover({{$loop->iteration}}, "table-coordenador" )'></i></td>
                                     </tr>
                                   @endforeach
@@ -289,11 +287,12 @@
                                   </tr>
                                 </thead>
                                 <tbody>
-                                  @if (isset($dadosProject))
-                                    @foreach($dadosProject->getCriterios as $criterio)
+                                  @if (isset($editarRelatorio))
+                                    @foreach($editarRelatorio->getEquipeRelatorio as $equipe)
                                       <tr>
                                         <td>{{$loop->iteration}}</td>
-                                        <td>{{$criterio->desc_criterio}}</td>
+                                        <td>{{$equipe->nome}}</td>
+                                        <td>{{$equipe->carga_horaria}}</td>
                                         <td><i class='fa fa-trash text-danger' onClick='remover({{$loop->iteration}}, "table-equipe_organizadora" )'></i></td>
                                       </tr>
                                     @endforeach
@@ -354,11 +353,13 @@
                                   </tr>
                                 </thead>
                                 <tbody>
-                                  @if (isset($dadosProject))
-                                    @foreach($dadosProject->getCriterios as $criterio)
+                                  @if (isset($editarRelatorio))
+                                    @foreach($editarRelatorio->getPalestrante as $palestrante)
                                       <tr>
                                         <td>{{$loop->iteration}}</td>
-                                        <td>{{$criterio->desc_criterio}}</td>
+                                        <td>{{$palestrante->nome}}</td>
+                                        <td>{{$palestrante->titulo}}</td>
+                                        <td>{{$palestrante->carga_horaria}}</td>
                                         <td><i class='fa fa-trash text-danger' onClick='remover({{$loop->iteration}}, "table-palestrantes" )'></i></td>
                                       </tr>
                                     @endforeach
@@ -413,11 +414,12 @@
                                   </tr>
                                 </thead>
                                 <tbody>
-                                  @if (isset($dadosProject))
-                                    @foreach($dadosProject->getCriterios as $criterio)
+                                  @if (isset($editarRelatorio))
+                                    @foreach($editarRelatorio->getMonitor as $monitor)
                                       <tr>
                                         <td>{{$loop->iteration}}</td>
-                                        <td>{{$criterio->desc_criterio}}</td>
+                                        <td>{{$monitor->nome}}</td>
+                                        <td>{{$monitor->carga_horaria}}</td>
                                         <td><i class='fa fa-trash text-danger' onClick='remover({{$loop->iteration}}, "table-monitores" )'></i></td>
                                       </tr>
                                     @endforeach
@@ -478,11 +480,13 @@
                                   </tr>
                                 </thead>
                                 <tbody>
-                                  @if (isset($dadosProject))
-                                    @foreach($dadosProject->getCriterios as $criterio)
+                                  @if (isset($editarRelatorio))
+                                    @foreach($editarRelatorio->getExpositor as $expositor)
                                       <tr>
                                         <td>{{$loop->iteration}}</td>
-                                        <td>{{$criterio->desc_criterio}}</td>
+                                        <td>{{$expositor->nome}}</td>
+                                        <td>{{$expositor->titulo}}</td>
+                                        <td>{{$expositor->carga_horaria}}</td>
                                         <td><i class='fa fa-trash text-danger' onClick='remover({{$loop->iteration}}, "table-expositores" )'></i></td>
                                       </tr>
                                     @endforeach
@@ -546,11 +550,13 @@
                                 </tr>
                               </thead>
                               <tbody>
-                                @if (isset($dadosProject))
-                                  @foreach($dadosProject->getCriterios as $criterio)
+                                @if (isset($editarRelatorio))
+                                  @foreach($editarRelatorio->getMinistrante as $ministrante)
                                     <tr>
                                       <td>{{$loop->iteration}}</td>
-                                      <td>{{$criterio->desc_criterio}}</td>
+                                      <td>{{$ministrante->nome}}</td>
+                                      <td>{{$ministrante->titulo}}</td>
+                                      <td>{{$ministrante->carga_horaria}}</td>
                                       <td><i class='fa fa-trash text-danger' onClick='remover({{$loop->iteration}}, "table-ministrantes" )'></i></td>
                                     </tr>
                                   @endforeach
@@ -605,11 +611,12 @@
                                 </tr>
                               </thead>
                               <tbody>
-                                @if (isset($dadosProject))
-                                  @foreach($dadosProject->getCriterios as $criterio)
+                                @if (isset($editarRelatorio))
+                                  @foreach($editarRelatorio->getParticipante as $participante)
                                     <tr>
                                       <td>{{$loop->iteration}}</td>
-                                      <td>{{$criterio->desc_criterio}}</td>
+                                      <td>{{$participante->nome}}</td>
+                                      <td>{{$participante->carga_horaria}}</td>
                                       <td><i class='fa fa-trash text-danger' onClick='remover({{$loop->iteration}}, "table-participantes" )'></i></td>
                                     </tr>
                                   @endforeach
@@ -664,11 +671,12 @@
                                  </tr>
                                </thead>
                                <tbody>
-                                 @if (isset($dadosProject))
-                                   @foreach($dadosProject->getCriterios as $criterio)
+                                 @if (isset($editarRelatorio))
+                                   @foreach($editarRelatorio->getOuvinte as $ouvinte)
                                      <tr>
                                        <td>{{$loop->iteration}}</td>
-                                       <td>{{$criterio->desc_criterio}}</td>
+                                       <td>{{$ouvinte->nome}}</td>
+                                       <td>{{$ouvinte->carga_horaria}}</td>
                                        <td><i class='fa fa-trash text-danger' onClick='remover({{$loop->iteration}}, "table-ouvintes" )'></i></td>
                                      </tr>
                                    @endforeach
@@ -900,7 +908,7 @@
                 "firstDay": 0
             },
             "startDate": '{{isset($editarRelatorio->periodo_realizacao) ? $editarRelatorio->periodo_realizacao : date("d/m/Y")}}' ,
-            "endDate": '{{isset($editarRelatorio->periodo_realizacao) ? explode(' - ',$editarRelatorio->periodo_realizacao)[1] : ""}}' || new Date(new Date().setDate(new Date().getDate() + 5)),
+            "endDate": '{{isset($editarRelatorio->periodo_realizacao) ? explode(' à ',$editarRelatorio->periodo_realizacao)[1] : ""}}' || new Date(new Date().setDate(new Date().getDate() + 5)),
         }, function(start, end, label) {
         });
 
@@ -1010,7 +1018,7 @@
     </script>
 
     <script>
-        //totalGeral = {{isset($dadosProject->total_geral) ? $dadosProject->total_geral : 0.0 }};
+        //totalGeral = {{isset($editarRelatorio->total_geral) ? $editarRelatorio->total_geral : 0.0 }};
 
           function preencheTabela(array, idTabela) 
           {

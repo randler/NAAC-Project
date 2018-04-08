@@ -14,6 +14,7 @@ class RelatorioAutorController extends Controller
     {
         $projetos = auth()->user()->projects()
                                   ->where('status_projeto', 'Deferido')
+                                  ->where('has_relatorio', false)
                                   ->get(); 
         //dd($projetos); 
         return view('relatorio.index', compact('projetos'));
@@ -69,5 +70,128 @@ class RelatorioAutorController extends Controller
         }
 
 
+    }
+
+    /**
+     * 
+     * 
+     */
+    public function salvarCorrecaoRelatorio(RelatorioFormRequest $request, int $id)
+    {
+        $dadosValidados = $request->validated();
+        dd($dadosValidados, $id);
+    }
+
+    /**
+     * 
+     * 
+     */
+    public function todosRelatoriosUser()
+    {
+        $relatorios = auth()->user()
+                                ->relatorios()
+                                ->get();
+        return view('relatorio.relatorio.view', compact('relatorios'));
+    }
+
+    /**
+     * 
+     * 
+     */
+    public function relatoriosCorrecao()
+    {
+        $messageTitle = 'Todos os Relatórios a Corrigir';
+        $messageEmpty = 'Não há relatórios a corrigir';
+        $relatorios = auth()->user()
+                                ->relatorios()
+                                ->where('status_relatorio', 'Indeferido')
+                                ->orWhere('status_relatorio', 'Corrigir')
+                                ->orWhere('status_relatorio', 'Recorrigir')
+                                ->get();
+        //dd($relatorios);
+        return view('relatorio.relatorio.view', compact('relatorios', 'messageEmpty', 'messageTitle'));
+    }
+
+    /**
+     * 
+     * 
+     */
+    public function relatoriosDeferidos()
+    {
+        $messageTitle = 'Todos os Relatórios Deferidos';
+        $messageEmpty = 'Não há relatórios deferidos';
+        $relatorios = auth()->user()
+                                ->relatorios()
+                                ->where('status_relatorio', 'Deferido')
+                                ->get();
+        //dd($relatorios);
+        return view('relatorio.relatorio.view', compact('relatorios', 'messageEmpty', 'messageTitle'));
+    }
+
+    public function viewCorrigirRelatorio(int $id, $notify_id = '')
+    {
+        $editarRelatorio = auth()->user()
+                            ->relatorios()
+                            ->where('id', $id)
+                            ->with([
+                                'getProjeto',
+                                'getCoordenador',
+                                'getCronograma',
+                                'getEquipeRelatorio',
+                                'getExpositor',
+                                'getMinistrante',
+                                'getMonitor',
+                                'getOuvinte',
+                                'getPalestrante',
+                                'getParticipante'])
+                            ->get()
+                            ->first();
+        
+        $editarRelatorio['table-cronograma']           = $this->getCronogramaValues($editarRelatorio->getCronograma);
+        $editarRelatorio['table-coordenador']          = $this->getTwoValues($editarRelatorio->getCoordenador);
+        $editarRelatorio['table-equipe_organizadora']  = $this->getTwoValues($editarRelatorio->getEquipeRelatorio);
+        $editarRelatorio['table-palestrantes']         = $this->getThreeValues($editarRelatorio->getPalestrante);
+        $editarRelatorio['table-monitores']            = $this->getTwoValues($editarRelatorio->getMonitor);
+        $editarRelatorio['table-expositores']          = $this->getThreeValues($editarRelatorio->getExpositor);
+        $editarRelatorio['table-ministrantes']         = $this->getThreeValues($editarRelatorio->getMinistrante);
+        $editarRelatorio['table-participantes']        = $this->getTwoValues($editarRelatorio->getParticipante);
+        $editarRelatorio['table-ouvintes']             = $this->getTwoValues($editarRelatorio->getOuvinte);
+        //dd($editarRelatorio);                    
+        $projeto = $editarRelatorio->getProjeto;
+        //dd($id, $notify_id, $editarRelatorio);
+        return view('relatorio.relatorio.create_edit', compact('editarRelatorio', 'projeto'));
+    }
+
+
+    /*** PEGAR VALOR DO BANCO DE DADOS PARA ENVIAR PARA O INPUT DO TIPO HIDDEN */
+    private function getTwoValues($dadosProject): String
+    {
+        $value = '';
+        foreach($dadosProject as $val)
+            $value .=  $val->nome.'|'.
+                       $val->carga_horaria.'|';                            
+
+            return $value;
+    }
+
+    private function getThreeValues($dadosProject): String
+    {
+        $value = '';
+        foreach($dadosProject as $val)
+            $value .=  $val->nome.'|'.
+                       $val->titulo.'|'.
+                       $val->carga_horaria.'|';                            
+
+            return $value;
+    }
+
+    private function getCronogramaValues($dadosProject): String
+    {
+        $value = '';
+        foreach($dadosProject as $val)
+            $value .=  $val->desc_atividade.'|'.
+                       $val->data.'|';                            
+
+            return $value;
     }
 }

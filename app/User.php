@@ -6,6 +6,7 @@ use Illuminate\Notifications\Notifiable;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 
 use App\Models\Projeto;
+use App\Models\Relatorio;
 use App\Notifications\ResetPassword;
 use DB;
 
@@ -41,6 +42,11 @@ class User extends Authenticatable
     public function projects()
     {
         return $this->hasMany(Projeto::class);
+    }
+
+    public function relatorios()
+    {
+        return $this->hasMany(Relatorio::class);
     }
 
     public function atualizarUsuario($user): Array

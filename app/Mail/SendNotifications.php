@@ -11,16 +11,16 @@ class SendNotifications extends Mailable
 {
     use Queueable, SerializesModels;
 
-    private $content;
+    public $dadosEmail;
 
     /**
      * Create a new message instance.
      *
      * @return void
      */
-    public function __construct($content)
+    public function __construct($dadosEmail)
     {
-        $this->content = $content;
+        $this->dadosEmail = $dadosEmail;
     }
 
     /**
@@ -30,7 +30,7 @@ class SendNotifications extends Mailable
      */
     public function build()
     {
-        return $this->markdown('email.body-mail')
-                        ->with('content', $this->content);
+        return $this->view('email.body-mail')
+                    ->subject($this->dadosEmail->assunto);
     }
 }

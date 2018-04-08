@@ -19,8 +19,8 @@ class CreateProjetosTable extends Migration
             $table->integer('user_id')->unsigned();
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
             
-            $table->integer('realtorio_id')->unsigned()->nullable();
-            $table->foreign('realtorio_id')->references('id')->on('relatorios')->onDelete('cascade');
+            $table->integer('relatorio_id')->unsigned()->nullable();
+            $table->foreign('relatorio_id')->references('id')->on('relatorios')->onDelete('cascade');
             
             // ********************* Dados da tabela projeto *************************
             $table->string  ('titulo_projeto')->unique();

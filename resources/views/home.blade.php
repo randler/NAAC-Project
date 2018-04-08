@@ -18,10 +18,10 @@
         <div class="py-5 col-md-6">
           <div class="row">
             <div class="text-center col-3 col-sm-2 col-md-3 col-lg-2 col-xl-2">
-              <a href="#" class="text-secondary" style="text-decoration:none; "><i class="d-block fa-5x far fa-file"></i></a>
+              <a href="{{route('new-projeto')}}" class="text-secondary" style="text-decoration:none; "><i class="d-block fa-5x far fa-file"></i></a>
             </div>
             <div class="col-9">
-              <a href=" {{route('new-projeto')}} " class="text-secondary" style="text-decoration:none; ">
+              <a href="{{route('new-projeto')}}" class="text-secondary" style="text-decoration:none; ">
                 <h3 class="m-4"><b>Novo Projeto de Extensão</b></h3>
               </a>
             </div>
@@ -30,9 +30,9 @@
         <div class="py-5 col-md-6">
           <div class="row">
             <div class="text-center col-3 col-sm-2 col-md-3 col-lg-2 col-xl-2">
-            <a href="#" class="text-secondary" style="text-decoration:none; "><i class="d-block fa-5x far fa-file"></i></a></div>
+            <a href="{{route('index-relatorio')}}" class="text-secondary" style="text-decoration:none; "><i class="d-block fa-5x far fa-file"></i></a></div>
             <div class="col-9">
-              <a href=" {{route('index-relatorio')}} " class="text-secondary" style="text-decoration:none; ">
+              <a href="{{route('index-relatorio')}}" class="text-secondary" style="text-decoration:none; ">
                   <h3 class="mt-4"><b>Novo Relatório de projeto de Extensão</b></h3></a>
             </div>
           </div>
@@ -42,7 +42,7 @@
         <div class="py-5 col-md-6">
           <div class="row">
             <div class="text-center col-3 col-sm-2 col-md-3 col-lg-2 col-xl-2">
-                <a href="#" class="text-secondary" style="text-decoration:none; "><i class="d-block mx-auto fa-5x far fa-copy"></i></a></div>
+                <a href="{{route('todos-projetos-user')}}" class="text-secondary" style="text-decoration:none; "><i class="d-block mx-auto fa-5x far fa-copy"></i></a></div>
             <div class="col-9">
               <a href="{{route('todos-projetos-user')}}" class="text-secondary" style="text-decoration:none; ">
                   <h3 class="m-4"><b>Ver Projetos</b></h3></a>
@@ -52,19 +52,41 @@
         <div class="py-5 col-md-6">
           <div class="row">
             <div class="text-center col-3 col-sm-2 col-md-3 col-lg-2 col-xl-2">
-                <a href="#" class="text-secondary" style="text-decoration:none; "><i class="d-block mx-auto fa-5x far fa-copy"></i></a></div>
+                <a href="{{route('todos-relatorios-user')}}" class="text-secondary" style="text-decoration:none; "><i class="d-block mx-auto fa-5x far fa-copy"></i></a></div>
             <div class="col-9">
-              <a href="#" class="text-secondary" style="text-decoration:none; ">
+              <a href="{{route('todos-relatorios-user')}}" class="text-secondary" style="text-decoration:none; ">
                   <h3 class="m-4"><b>Ver Relatórios</b></h3></a>
             </div>
           </div>
         </div>
       </div>
       <div class="row">
+          <div class="py-5 col-md-6">
+            <div class="row">
+              <div class="text-center col-3 col-sm-2 col-md-3 col-lg-2 col-xl-2">
+                  <a href="{{route('projetos-deferidos-user')}}" class="text-secondary" style="text-decoration:none; "><i class="d-block mx-auto fa-5x far fa-check-square"></i></a></div>
+              <div class="col-9">
+                <a href="{{route('projetos-deferidos-user')}}" class="text-secondary" style="text-decoration:none; ">
+                    <h3 class="m-4"><b>Projetos Deferidos</b></h3></a>
+              </div>
+            </div>
+          </div>
+          <div class="py-5 col-md-6">
+            <div class="row">
+              <div class="text-center col-3 col-sm-2 col-md-3 col-lg-2 col-xl-2">
+                  <a href="{{route('relatorios-deferidos-user')}}" class="text-secondary" style="text-decoration:none; "><i class="d-block mx-auto fa-5x far fa-check-square"></i></a></div>
+              <div class="col-9">
+                <a href="{{route('relatorios-deferidos-user')}}" class="text-secondary" style="text-decoration:none; ">
+                    <h3 class="m-4"><b>Relatórios Deferidos</b></h3></a>
+              </div>
+            </div>
+          </div>
+        </div>
+      <div class="row">
         <div class="py-5 col-md-6">
           <div class="row">
             <div class="text-center col-3 col-sm-2 col-md-3 col-lg-2 col-xl-2">
-                <a href="#" class="text-secondary" style="text-decoration:none; "><i class="d-block mx-auto fa-5x fas fa-edit"></i></a></div>
+                <a href="{{route('projetos-correcao-user')}}" class="text-secondary" style="text-decoration:none; "><i class="d-block mx-auto fa-5x fas fa-edit"></i></a></div>
             <div class="col-9">
               <a href="{{route('projetos-correcao-user')}}" class="text-secondary" style="text-decoration:none; ">
                   <h3 class="m-4"><b>Projetos com correções</b></h3></a>
@@ -74,9 +96,9 @@
         <div class="py-5 col-md-6">
           <div class="row">
             <div class="text-center col-3 col-sm-2 col-md-3 col-lg-2 col-xl-2">
-                <a href="#" class="text-secondary" style="text-decoration:none; "><i class="d-block mx-auto fa-5x fas fa-edit"></i></a></div>
+                <a href="{{route('relatorios-correcao-user')}}" class="text-secondary" style="text-decoration:none; "><i class="d-block mx-auto fa-5x fas fa-edit"></i></a></div>
             <div class="col-9">
-              <a href="#" class="text-secondary" style="text-decoration:none; ">
+              <a href="{{route('relatorios-correcao-user')}}" class="text-secondary" style="text-decoration:none; ">
                   <h3 class="m-4"><b>Relatórios com correções</b></h3></a>
             </div>
           </div>

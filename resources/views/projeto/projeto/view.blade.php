@@ -7,7 +7,7 @@
         <div class="row">
             <div class="col-md-12 text-center">
                 <i class="fa-5x far fa-file"></i>
-                <h3 class="display-3">{{$messageTitle or 'Todos projetos'}}</h3>
+                <h3 class="display-3">{{$messageTitle or 'Todos os seus projetos'}}</h3>
             </div>
         </div>
     </div>
@@ -22,7 +22,7 @@
                         <div class="card-body">
                             <h4>{{$projeto->autores}}</h4> 
                             @if ($projeto->status_projeto == 'Deferido')
-                                <h6 class="text-muted">Status: <span class="badge badge-success">{{$projeto->status_projeto}}</span></h6>
+                                <h6 class="text-muted">Status: <span class="badge badge-success">{{$projeto->status_projeto}}</span> @if($projeto->has_relatorio) <span class="mx-1 badge badge-secondary">Tem relatório</span> @endif</h6>
                             @elseif ($projeto->status_projeto == 'Indeferido' || $projeto->status_projeto == 'Recorrigir')
                                 <h6 class="text-muted">Status: <span class="badge badge-danger">{{$projeto->status_projeto}}</span></h6>
                             @elseif ($projeto->status_projeto == 'Enviado'|| $projeto->status_projeto == 'Reenviado')

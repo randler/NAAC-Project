@@ -4,11 +4,13 @@ namespace App\Http\Controllers\Projeto;
 
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use App\Mail\SendNotifications;
 
 use App\Models\Projeto;
 use App\Http\Requests\Projeto\ProjetoFormRequest;
 
 use Validator;
+use Mail;
 
 class ProjetoAutorController extends Controller
 {
@@ -27,9 +29,21 @@ class ProjetoAutorController extends Controller
         $dadosValidados = $request->validated();
         //envia para o metodo salvar do model os dados 
         $responseSave = $projeto->salvarProjeto($dadosValidados);
+        //compor e-mail
+        $dadosEmail = (object) Array (
+            'para'      => 'naac.ftc.sac@gmail.com',
+            'assunto'   => '[NAAC - Novo Projeto Cadastrado]',
+            'title'     => 'Novo Projeto',
+            'mensagem'  => 'Um novo projeto foi adicionado',
+            'titulo'    => $request->titulo_projeto,
+            'autor'     => auth()->user()->name,
+            'tipo'      => 'novo-projeto',
+            'link'      => route('corrigir-project', [$responseSave['id']])
+        );
         //se ocorrer tudo certo retorna a pagina principal com sucesso
         // caso não ele retorna ao formulário com os dados e com o especifico erro
         if($responseSave['success']) {
+            $this->sendEmail($dadosEmail);
            return redirect()
                         ->route('home')
                         ->with('success',$responseSave['message']);
@@ -46,10 +60,9 @@ class ProjetoAutorController extends Controller
     */
     public function todosProjetosUser()
     {
-        $projetos = auth()->user()->projects;
-        $messageTitle = 'Todos os seus projetos ';   
+        $projetos = auth()->user()->projects;  
 
-        return view('projeto.all-projects.all-projects', compact('projetos', 'messageTitle'));
+        return view('projeto.projeto.view', compact('projetos'));
     }
 
     /* METODO DE VISUALIZAR TODOS OS PROJETOS
@@ -57,12 +70,25 @@ class ProjetoAutorController extends Controller
     */
     public function projetosCorrecao()
     {
+        $messageTitle = 'Todos os projetos a corrigir';
+        $messageEmpty = 'Não há projetos a corrigir';
         $projetos = auth()->user()->projects()
                                   ->where('status_projeto', 'Corrigir')
                                   ->orWhere('status_projeto', 'Recorrigir')
                                   ->get();
         //dd($projetos);                                  
-        return view('projeto.correcao.projetos-correcao', compact('projetos'));
+        return view('projeto.projeto.view', compact('projetos', 'messageTitle', 'messageEmpty'));
+    }
+
+    public function projetosDeferidos()
+    {
+        $messageTitle = 'Todos os projetos deferidos';
+        $messageEmpty = 'Não há projeto deferido';
+        $projetos = auth()->user()->projects()
+                                  ->where('status_projeto', 'Deferido')
+                                  ->get();
+        //dd($projetos);                                  
+        return view('projeto.projeto.view', compact('projetos', 'messageTitle', 'messageEmpty'));
     }
 
     //******** CORREÇÃO  ************************/
@@ -132,8 +158,19 @@ class ProjetoAutorController extends Controller
          
         //dd($request->all());
         $responseUpdate = $projeto->userCorrigirProjeto($id, $request->all());
+        $dadosEmail = (object) Array (
+            'para'      => 'naac.ftc.sac@gmail.com',
+            'assunto'   => '['. auth()->user()->name .' - Projeto Corrigido]',
+            'title'     => 'Projeto Corrigido',
+            'mensagem'  => 'O projeto '. $request->titulo_projeto .' foi corrigido.',
+            'titulo'    => $request->titulo_projeto,
+            'autor'     => auth()->user()->name,
+            'tipo'      => 'projeto-corrigido',
+            'link'      => route('corrigir-project', [$responseUpdate['id']])
+        );
         //dd($responseUpdate);
         if($responseUpdate['success']) {
+            $this->sendEmail($dadosEmail);
             return redirect()
                         ->route('home')
                         ->with('success',$responseUpdate['message']);
@@ -177,7 +214,7 @@ class ProjetoAutorController extends Controller
         }
         
         
-        return view('projeto.projeto-solicitado.visualizar-projeto', 
+        return view('projeto.projeto.visualizar-projeto', 
                     compact('dadosProject', 'total_geral'));
     }
 
@@ -297,5 +334,15 @@ class ProjetoAutorController extends Controller
         foreach (auth()->user()->unreadNotifications as $notification)
             if ($notification->id == $notify_id)
                 $notification->delete();
+    }
+
+    /******************************************** */
+
+    /**
+     * 
+     */
+    private function sendEmail($dadosEmail)
+    {
+        Mail::to($dadosEmail->para)->send(new SendNotifications($dadosEmail));
     }
 }

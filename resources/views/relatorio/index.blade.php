@@ -33,7 +33,7 @@
             @endif
         @empty
                 <div class="col-md-12">
-                <h1 class="text-center py-4">Não há projetos deferidos</h1>
+                <h1 class="text-center py-4">Não há projetos deferidos e sem relatórios.</h1>
                 <a href="{{route('home')}}"><p class="lead text-center"><i class=" fa text-center fa-lg fa-reply"></i>  Voltar</p></a>
                 </div>
         @endforelse

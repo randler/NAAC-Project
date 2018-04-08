@@ -56,7 +56,8 @@ class Projeto extends Model
         'avaliacao',
         'status_projeto',
         'correcao',
-        'retorno_proposta'        
+        'retorno_proposta',
+        'has_relatorio'        
     ];
 
     public function salvarProjeto(Array $dados): Array
@@ -149,7 +150,8 @@ class Projeto extends Model
 
                     return [
                         'success' => true,
-                        'message' => 'Projeto salvo com sucesso'
+                        'message' => 'Projeto salvo com sucesso',
+                        'id'      =>$insert->id
                     ];
                 } else {
                     DB::rollback();
@@ -374,7 +376,8 @@ class Projeto extends Model
     public function setRelatorio(int $idRelatorio)
     {
         $update = $this->update([
-            'realtorio_id' => $idRelatorio
+            'realtorio_id' => $idRelatorio,
+            'has_relatorio' => true
         ]);
 
         if ($update)

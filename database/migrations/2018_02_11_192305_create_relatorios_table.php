@@ -20,18 +20,19 @@ class CreateRelatoriosTable extends Migration
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
 
             // ********************* Dados da tabela realtorio *************************
-            $table->string('titulo');
-            $table->string('area');
-            $table->string('sub_area');
-            $table->string('coordenador_projeto');
-            $table->string('cpf');
-            $table->integer('carga_horaria_evento');
-            $table->string('periodo_realizacao');
-            $table->string('periodo_abrangido_relatorio');
-            $table->string('objetivo_geral');
-            $table->string('objetivos_especificos');
-            $table->text('resultados_obtidos');
-            $table->enum('parecer_responsavel', ['Excelente', 'Bom', 'Regular', 'Insuficiente']);
+            $table->string  ('titulo');
+            $table->string  ('area');
+            $table->string  ('sub_area');
+            $table->string  ('coordenador_projeto');
+            $table->string  ('cpf');
+            $table->integer ('carga_horaria_evento');
+            $table->string  ('periodo_realizacao');
+            $table->string  ('periodo_abrangido_relatorio');
+            $table->string  ('objetivo_geral');
+            $table->string  ('objetivos_especificos');
+            $table->text    ('resultados_obtidos');
+            $table->enum    ('parecer_responsavel', ['Excelente', 'Bom', 'Regular', 'Insuficiente']);
+            $table->enum    ('status_relatorio', ['Enviado', 'Corrigir', 'Deferido', 'Indeferido', 'Reenviado', 'Recorrigir'])->default('Enviado');
             $table->timestamps();
         });
     }

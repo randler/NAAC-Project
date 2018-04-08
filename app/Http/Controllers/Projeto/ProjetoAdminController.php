@@ -8,8 +8,11 @@ use Validator;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Projeto\ProjetoFormRequest;
+use App\Mail\SendNotifications;
+use App\User;
 
 use Gate;
+use Mail;
 
 class ProjetoAdminController extends Controller
 {
@@ -34,11 +37,13 @@ class ProjetoAdminController extends Controller
     */
     public function projetosSolicitados(Projeto $projetos)
     {
+        $messageTitle = 'Projetos solicitados';
+        $messageEmpty = 'Não há projetos solicitados';
         $projetos = $projetos->where('status_projeto', 'Enviado')
                              ->orWhere('status_projeto', 'Reenviado')
                              ->get();
         //dd($projetos);                          
-        return view('projeto.projeto-solicitado.projeto-solicitado', compact('projetos'));
+        return view('projeto.projeto.view', compact('projetos', 'messageTitle', 'messageEmpty'));
     }
 
     /**METODO DE VISUALIZAR TODOS OS PROJETOS CADASTRADOS
@@ -49,7 +54,7 @@ class ProjetoAdminController extends Controller
     {
         $projetos = $projeto->all();
         //dd($projetos);
-        return view('projeto.all-projects.all-projects', compact('projetos'));
+        return view('projeto.projeto.view', compact('projetos'));
     }
 
     /**METODO DE VISUALIZAR TODOS OS PROJETOS CADASTRADOS COM CORREÇÕES
@@ -61,10 +66,10 @@ class ProjetoAdminController extends Controller
     {
         $projetos = $projeto->where('status_projeto', 'Reenviado')
                              ->get();
-        $messageTitle = 'Todos projetos reenviados';                             
+        $messageTitle = 'Projetos a corrigir';                             
         $messageEmpty = 'Não há projetos a corrigir';                     
         //dd($projetos);
-        return view('projeto.all-projects.all-projects', compact('projetos', 'messageEmpty', 'messageTitle'));
+        return view('projeto.projeto.view', compact('projetos', 'messageEmpty', 'messageTitle'));
     }
 
         /**METODO DE VISUALIZAR TODOS OS PROJETOS DEFERIDOS
@@ -79,7 +84,7 @@ class ProjetoAdminController extends Controller
         $messageTitle = 'Todos projetos deferidos';                             
         $messageEmpty = 'Não há projetos deferidos';                     
         //dd($projetos);
-        return view('projeto.all-projects.all-projects', compact('projetos', 'messageEmpty', 'messageTitle'));
+        return view('projeto.projeto.view', compact('projetos', 'messageEmpty', 'messageTitle'));
     }
 
     /* METODO DE CORREÇÃO PARA O ADMINISTRADOR
@@ -111,7 +116,7 @@ class ProjetoAdminController extends Controller
         foreach ($dadosProject->getOrcamentos as $orcamento)
             $total_geral += $orcamento->valor_total;
         
-        return view('projeto.projeto-solicitado.visualizar-projeto', 
+        return view('projeto.projeto.visualizar-projeto', 
                     compact('total_geral', 'dadosProject'));
     }
 
@@ -134,9 +139,28 @@ class ProjetoAdminController extends Controller
 
     public function deferirProjeto($id, Projeto $projeto)
     {
+        $dadosProjeto = $projeto->where('id', $id)->get()->first();
+        $user_id = $dadosProjeto->user_id;
+        
+        $dados_user = User::where('id', $user_id)->get()->first(); 
+        $email_user = $dados_user->email;
+        //dd(route('corrigir-projeto-user', [$id]));
+        
+        $dadosEmail = (object) Array (
+            'para'      => $email_user,
+            'assunto'   => '[NAAC - Status Projeto '. $dadosProjeto->titulo_projeto .']',
+            'title'     => 'Projeto Deferido',
+            'mensagem'  => 'Parabéns o projeto '. $dadosProjeto->titulo_projeto .' foi deferido.',
+            'titulo'    => $dadosProjeto->titulo_projeto,
+            'autor'     => $dados_user->name,
+            'tipo'      => 'projeto-deferido',
+            'link'      => route('visualizar-projeto', [$id])
+        );
+
         $retornoDeferir = $projeto->deferir($id);
 
         if ($retornoDeferir['success']) {
+            $this->sendEmail($dadosEmail);
             return redirect()
                         ->route('home')
                         ->with('success',$retornoDeferir['message']);
@@ -151,9 +175,28 @@ class ProjetoAdminController extends Controller
     {
         //$projetoCorrigir = $projeto->find($id);
         $correcaoForm = $request->except('_token');
+        
+        $dadosProjeto = $projeto->where('id', $id)->get()->first();
+        $user_id = $dadosProjeto->user_id;
+        
+        $dados_user = User::where('id', $user_id)->get()->first(); 
+        $email_user = $dados_user->email;
+        
+        $dadosEmail = (object) Array (
+            'para'      => $email_user,
+            'assunto'   => '[NAAC - Status Projeto '. $request->titulo_projeto .']',
+            'title'     => 'Projeto Indeferido',
+            'mensagem'  => 'O projeto '. $request->titulo_projeto .' precisa de correções.',
+            'titulo'    => $request->titulo_projeto,
+            'autor'     => $dados_user->name,
+            'tipo'      => 'projeto-indeferido',
+            'link'      => route('corrigir-projeto-user', [$id])
+        );
+
         $responseCorrigir = $projeto->salvarCorrecaoAdmin($correcaoForm, $id);
         
         if ($responseCorrigir['success']) {
+            $this->sendEmail($dadosEmail);
             return redirect()
                         ->route('home')
                         ->with('success',$responseCorrigir['message']);
@@ -169,5 +212,13 @@ class ProjetoAdminController extends Controller
         foreach (auth()->user()->unreadNotifications as $notification)
             if ($notification->id == $notify_id)
                 $notification->delete();
+    }
+
+    /******************* ENVIAR E-MAIL ********************
+     * 
+     */
+    private function sendEmail($dadosEmail)
+    {
+        Mail::to($dadosEmail->para)->send(new SendNotifications($dadosEmail));
     }
 }
