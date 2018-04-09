@@ -15,7 +15,7 @@ class UsersTableSeeder extends Seeder
         //
         User::create([
             'name'          => 'NAAC-admin',
-            'email'         => 'admin.naac@naac.com',
+            'email'         => 'naac.ftc.sac@gmail.com',
             'password'      => bcrypt('abobora'),
             'instituicao'   => 'FTC',
             'cpf'           => '000.000.000-00',
