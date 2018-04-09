@@ -166,7 +166,7 @@ class ProjetoAutorController extends Controller
             'titulo'    => $request->titulo_projeto,
             'autor'     => auth()->user()->name,
             'tipo'      => 'projeto-corrigido',
-            'link'      => route('corrigir-project', [$responseUpdate['id']])
+            'link'      => route('corrigir-project', [$id])
         );
         //dd($responseUpdate);
         if($responseUpdate['success']) {
