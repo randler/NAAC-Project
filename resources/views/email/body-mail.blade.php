@@ -31,7 +31,7 @@
           <div class="card-body text-center">
           <h4>{{$dadosEmail->autor}}</h4>
           <h6 class="text-muted">{{$dadosEmail->mensagem}}</h6>
-          @if ($dados->tipo == 'novo-usuario')
+          @if ($dadosEmail->tipo == 'novo-usuario')
             <a class="btn btn-block btn-primary" href="{{$dadosEmail->link}}"> Ver <i class="fas fa-user"></i></a>
           @else
             <a class="btn btn-block btn-primary" href="{{$dadosEmail->link}}"> Ver Projeto <i class="fas fa-search"></i></a>
