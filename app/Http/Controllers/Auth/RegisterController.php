@@ -7,8 +7,10 @@ use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Foundation\Auth\RegistersUsers;
 use App\Notifications\ProjetoNotification;
+use App\Mail\SendNotifications;
 
 use DB;
+use Mail;
 
 class RegisterController extends Controller
 {
@@ -85,6 +87,20 @@ class RegisterController extends Controller
         //dd($user);
 
         if ($user) {
+
+            $dadosEmail = (object) Array (
+                'para'      => 'naac.ftc.sac@gmail.com',
+                'assunto'   => '[Novo Usuário Cadastrado]',
+                'title'     => 'Projeto Corrigido',
+                'mensagem'  => 'Usuário ' . $data['name'] . ' Cadastrado.',
+                'titulo'    => 'Novo usuário',
+                'autor'     => $data['name'],
+                'tipo'      => 'novo-usuario',
+                'link'      => route('request-users')
+            );
+
+            $this->sendEmail($dadosEmail);
+
             $notifyProject = (object) [
                 'id' => 'new_user',
                 'titulo_projeto' => $data['name'],
@@ -102,5 +118,10 @@ class RegisterController extends Controller
         }
         
         return $user;
+    }
+
+    private function sendEmail($dadosEmail)
+    {
+        Mail::to($dadosEmail->para)->send(new SendNotifications($dadosEmail));
     }
 }
