@@ -989,15 +989,20 @@
                   } 
                   // caso não ele irá pegar os dados do array e adicionar em sua coluna especifica
                   else if (j > 0  && j < (numOfCols-1) && j <= array.length) {
-                    // dadosTabela será adicionado a um input do tipo hidden com separador | que será utilizado
-                    //  posteriormente no metodo de salvar no BD
-                    dadosTabela += array[j-1].value + '|'; 
                     //se o campo envolver um valor de formatação de valor de moeda adicionar a vírgula segundo o padrão pt-BR
                     //caso não somente adicione o campo de acordo como no seu determinado input
-                    if (array[j-1].id == 'inputValorUnitario')
+                    if (array[j-1].id == 'inputValorUnitario') {  
+                      // dadosTabela será adicionado a um input do tipo hidden com separador | que será utilizado
+                      //  posteriormente no metodo de salvar no BD
+                      dadosTabela += parseFloat((array[j-1].value.split('.').join('')).split(',').join('.')).toFixed(2) + '|'; 
+                      
                       newCell.innerHTML = 'R$' + array[j-1].value.toLocaleString('pt-BR');
-                    else
-                      newCell.innerHTML = array[j-1].value;  
+                    } else {
+                      // dadosTabela será adicionado a um input do tipo hidden com separador | que será utilizado
+                      //  posteriormente no metodo de salvar no BD
+                      dadosTabela += array[j-1].value + '|'; 
+                      newCell.innerHTML = array[j-1].value;
+                    }  
                   } 
                   //caso seja a ultima coluna adicionar o link de remoção com icone da lixeira
                   else if (j == (numOfCols-1)) {
@@ -1010,6 +1015,7 @@
                     qtd = parseFloat(array[1].value);
                     valorProduto = parseFloat((array[2].value.split('.').join('')).split(',').join('.')).toFixed(2);
                     total = qtd * valorProduto;
+                    //total = total.toFixed(2);
                     totalGeral += total;
                     newCell.innerHTML = 'R$' + total.toLocaleString('pt-BR');
                   }
@@ -1017,7 +1023,7 @@
                   
               }
               //Adicionando so dados preencidos na tabel com o separador | no input do tipo hidden
-              var inputTable = document.getElementById(idTabela.replace("-", "")).value += dadosTabela; 
+              var inputTable = document.getElementById(idTabela.replace("-", ""));//.value += dadosTabela; 
               
               if (inputTable.value == 'false')
                 inputTable.value = '';

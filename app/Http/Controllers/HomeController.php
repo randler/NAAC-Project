@@ -47,11 +47,10 @@ class HomeController extends Controller
         $saida = false;
         $id = $request->notification;   
         foreach (auth()->user()->unreadNotifications as $notification)
-            if ($notification->data['id'] == $id) {
                 $del = $notification->delete();
-                if ($del)
-                    $saida = true;
-            }
+                
+        if ($del)
+           $saida = true;
 
         if($saida) {
             return redirect()

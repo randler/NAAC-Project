@@ -22,10 +22,13 @@ class Oracamento extends Model
         $projetoController = new ProjetoAutorController;
         //dd($dados);
         $dataTable = $projetoController->stringToArray($dados['table-orcamento']);
-        //dd($dataTable, (int) $dataTable[1] * (float) str_replace(',', '.', str_replace('.', '', $dataTable[2])));
+        /*dd( $dataTable,
+            (int) $dataTable[1],
+            (float) $dataTable[14],
+            (int) $dataTable[13] * (float) $dataTable[14]);*/
         for ($i=0; $i < count($dataTable); $i+=3) {
             $quantidade     = (int) $dataTable[($i + 1)];
-            $valorUnitario  = (float) str_replace(',', '.', str_replace('.', '', $dataTable[($i + 2)]));
+            $valorUnitario  = (float) $dataTable[($i + 2)];
             $valorTotar     = $quantidade * $valorUnitario;
             
             $insert = $this->create([
