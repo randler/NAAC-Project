@@ -175,6 +175,10 @@ class Projeto extends Model
             }
     }
 
+    /********************* SALVAR AS INFORMAÇÕES DE INDEFERIR ****************
+     * 
+     * 
+     */
     public function salvarCorrecaoAdmin(Array $correcaoForm, $id): Array
     {
         DB::beginTransaction();
@@ -210,6 +214,10 @@ class Projeto extends Model
         }
     }
 
+    /********************** SALVAR AS CORREÇÕES FEITA PELO USUARIO **********************
+     * 
+     * 
+     */
     public function userCorrigirProjeto(int $id, Array $request): Array
     {
         DB::beginTransaction();
@@ -376,7 +384,7 @@ class Projeto extends Model
     public function setRelatorio(int $idRelatorio)
     {
         $update = $this->update([
-            'realtorio_id' => $idRelatorio,
+            'relatorio_id' => $idRelatorio,
             'has_relatorio' => true
         ]);
 

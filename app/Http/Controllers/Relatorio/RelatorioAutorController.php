@@ -48,6 +48,31 @@ class RelatorioAutorController extends Controller
         return view('relatorio.relatorio.create_edit', compact('projeto'));                         
     }
 
+    /** ********************** EXIBIR RELATORIO **************************
+     * 
+     * 
+     * 
+     */
+    public function verRelatorio($id, Relatorio $relatorio)
+    {
+        $dadosRelatorio = $relatorio
+                                ->where('id', $id)
+                                ->with([
+                                    'getCoordenador',
+                                    'getCronograma',
+                                    'getEquipeRelatorio',
+                                    'getExpositor',
+                                    'getMinistrante',
+                                    'getMonitor',
+                                    'getOuvinte',
+                                    'getPalestrante',
+                                    'getParticipante'])
+                                ->get()
+                                ->first();
+        //dd($dadosRelatorio);
+        return view('relatorio.relatorio.visualizar-relatorio', compact('dadosRelatorio'));
+    }
+
 
     /** ***************** METODO PARA SALVAR UM NOVO RELATORIO **********************
      * 
@@ -68,18 +93,28 @@ class RelatorioAutorController extends Controller
                         ->back()
                         ->with('error', $responseSave['message']);
         }
-
-
     }
 
     /**
      * 
      * 
      */
-    public function salvarCorrecaoRelatorio(RelatorioFormRequest $request, int $id)
+    public function salvarCorrecaoRelatorio(RelatorioFormRequest $request, int $id, Relatorio $relatorio)
     {
         $dadosValidados = $request->validated();
-        dd($dadosValidados, $id);
+        //dd($dadosValidados, $id);
+
+        $responseUpdate = $relatorio->salvarCorrecaoRelatorioUser($id, $dadosValidados);
+
+        if ($responseUpdate['success']) {
+            return redirect()
+                        ->route('home')
+                        ->with('success', $responseUpdate['message']);   
+        } else {
+            return redirect()
+                        ->back()
+                        ->with('error', $responseUpdate['message']);
+        }
     }
 
     /**

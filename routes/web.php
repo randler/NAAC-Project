@@ -26,6 +26,7 @@ $this->post('send-contact', 'Admin\ContatoController@sendEmailContact')->name('s
 
 $this->get('/perfil',   'User\PerfilController@index')->middleware('auth', 'auth.unique.user')->name('perfil');
 $this->get('/download-projeto/{id}',    'Projeto\DownloadController@downloadProjetoPDF')->middleware('auth', 'auth.unique.user')->name('download-projeto');
+$this->get('/download-relatorio/{id}',  'Relatorio\DownloadController@downloadRelatorioPDF')->middleware('auth', 'auth.unique.user')->name('download-relatorio');
 $this->get('/download-lista/{id}',      'Projeto\DownloadController@downloadListaPDF')->middleware('auth', 'auth.unique.user')->name('download-lista');
 
 
@@ -46,11 +47,11 @@ $this->group(['namespace' => 'Projeto','middleware' => ['auth', 'check.autor', '
 $this->group(['namespace' => 'Relatorio', 'middleware' => ['auth', 'check.autor', 'auth.unique.user']], function() {
     $this->get('/projetos-relatorio',   'RelatorioAutorController@index')->name('index-relatorio');
     $this->get('/novo-relatorio/{id}',  'RelatorioAutorController@novoRelatorio')->name('novo-relatorio');
-    $this->get('/novo-relatorio/{id}',  'RelatorioAutorController@novoRelatorio')->name('novo-relatorio');
-        $this->get('/relatorios-usuario',   'RelatorioAutorController@todosRelatoriosUser')->name('todos-relatorios-user');
+    $this->get('/relatorios-usuario',   'RelatorioAutorController@todosRelatoriosUser')->name('todos-relatorios-user');
     $this->get('/relatorios-deferidos-usuario',   'RelatorioAutorController@relatoriosDeferidos')->name('relatorios-deferidos-user');
     $this->get('/relatorios-correcao',  'RelatorioAutorController@relatoriosCorrecao')->name('relatorios-correcao-user');
     $this->get('/editar-relatorio-usuario/{id}/{notify_id?}', 'RelatorioAutorController@viewCorrigirRelatorio')->name('corrigir-relatorio-user');
+    $this->get('/ver-relatorio/{id}/{notify_id?}',            'RelatorioAutorController@verRelatorio')->name('visualizar-relatorio');
 
     $this->post('salvar-relatorio', 'RelatorioAutorController@salvarRelatorio')->name('salvar-relatorio');
 
@@ -75,4 +76,22 @@ $this->group(['namespace' => 'Projeto', 'middleware' => ['auth', 'check.admin', 
     $this->get('/deferir-projeto/{id}',             'ProjetoAdminController@deferirProjeto')            ->name('deferir-projeto');
     
     
+});
+
+$this->group(['namespace' => 'Relatorio', 'middleware' => ['auth', 'check.admin', 'auth.unique.user']], function() {
+    $this->get('/todos-relatorios',                     'RelatorioAdminController@todosRelatoriosAdmin')->name('todos-Relatorios-admin');
+    $this->get('/editar-Relatorio/{id}/{notify_id?}',   'RelatorioAdminController@exibirCorrigirRelatorioAdmin')->name('corrigir-relatorio-admin');
+
+    $this->get('/deferir-Relatorio/{id}', 'RelatorioAdminController@deferirRelatorio')->name('deferir-relatorio');
+
+    $this->put('/salvar-correcao-relatorio/{id}',       'RelatorioAdminController@salvarCorrigirRelatorio')->name('salvar-corrigir-relatorio');
+    /*$this->get('/Relatorios-reenviados',  'RelatorioAdminController@todosRelatoriosCorrigidos')    ->name('Relatorios-reenviados');
+    $this->get('/Relatorios-deferidos',   'RelatorioAdminController@todosRelatoriosDeferidos')      ->name('Relatorios-deferidos');
+    $this->get('/Relatorios-enviados',    'RelatorioAdminController@RelatoriosSolicitados')          ->name('Relatorios-solicitados');
+    
+    $this->post('/editar-Relatorio/{id}',             'RelatorioAdminController@salvarCorrigirRelatorio')     ->name('salvar-corrigir-relatorio');
+    $this->get('/indeferir-Relatorio/{id}',           'RelatorioAdminController@indeferirRelatorio')        ->name('indeferir-Relatorio');
+    $this->get('/deferir-Relatorio/{id}',             'RelatorioAdminController@deferirRelatorio')            ->name('deferir-relatorio');
+    
+    */
 });

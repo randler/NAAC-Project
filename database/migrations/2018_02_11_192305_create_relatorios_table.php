@@ -31,6 +31,8 @@ class CreateRelatoriosTable extends Migration
             $table->string  ('objetivo_geral');
             $table->string  ('objetivos_especificos');
             $table->text    ('resultados_obtidos');
+            $table->text    ('parecer_naac')->nullable();
+            $table->text    ('correcao')->nullable();
             $table->enum    ('parecer_responsavel', ['Excelente', 'Bom', 'Regular', 'Insuficiente']);
             $table->enum    ('status_relatorio', ['Enviado', 'Corrigir', 'Deferido', 'Indeferido', 'Reenviado', 'Recorrigir'])->default('Enviado');
             $table->timestamps();

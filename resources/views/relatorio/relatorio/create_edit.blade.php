@@ -18,7 +18,7 @@
           <p class="">Paragraph. Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
         </div>
       </div>
-       @if(isset($editarRelatorio) && ($editarRelatorio->status_projeto == 'Corrigir' || $editarRelatorio->status_projeto == 'Recorrigir'))
+       @if(isset($editarRelatorio) && ($editarRelatorio->status_relatorio == 'Indeferido' || $editarRelatorio->status_relatorio == 'Recorrigir'))
           <div class="row">
             <div class="col-md-12">
               <div class="alert alert-warning" role="alert">
@@ -74,7 +74,9 @@
                       <div class="form-group row"> 
                         <label class="col-sm-2 col-form-label text-left">Título do projeto</label>
                         <div class="col-sm-10">
-                          {!! Form::hidden('projeto_id', $projeto->id) !!}
+                          @if (isset($projeto))
+                            {!! Form::hidden('projeto_id', $projeto->id) !!}
+                          @endif
                           {!! Form::text('titulo', isset($editarRelatorio) ? null : $projeto->titulo_projeto, ['class' => 'form-control', 'readonly', 'placeholder' => 'Digite o colegiado de origem', 'id' => 'inputColegiado']) !!}
                         </div>
                       </div>
@@ -249,7 +251,7 @@
                         <div class="form-group row">
                           <div class="form-check col-12 text-left">
                             <div class="col-md-2">
-                                {!! Form::checkbox('inlineCheckEquipeOrganizadora', null, (isset($editarRelatorio) && count($editarRelatorio->getCriterios) <= 0) ? 1 : 0, ['class' => 'form-check-input ml-1', 'onClick' => 'check(this.id)', 'id' => 'defaultCheckEquipeOrganizadora']) !!}
+                                {!! Form::checkbox('inlineCheckEquipeOrganizadora', null, (isset($editarRelatorio) && count($editarRelatorio->getEquipeRelatorio) <= 0) ? 1 : 0, ['class' => 'form-check-input ml-1', 'onClick' => 'check(this.id)', 'id' => 'defaultCheckEquipeOrganizadora']) !!}
                             </div>
                             <div class="col-md-4"> <label class="form-check-label" for="defaultCheckEquipeOrganizadora">
                               Não se aplica
@@ -309,7 +311,7 @@
                         <div class="form-group row">
                           <div class="form-check col-12 text-left">
                             <div class="col-md-2">
-                                {!! Form::checkbox('inlineCheckPalestrantes', null, (isset($editarRelatorio) && count($editarRelatorio->getCriterios) <= 0) ? 1 : 0, ['class' => 'form-check-input ml-1', 'onClick' => 'check(this.id)', 'id' => 'defaultCheckPalestrantes']) !!}
+                                {!! Form::checkbox('inlineCheckPalestrantes', null, (isset($editarRelatorio) && count($editarRelatorio->getPalestrante) <= 0) ? 1 : 0, ['class' => 'form-check-input ml-1', 'onClick' => 'check(this.id)', 'id' => 'defaultCheckPalestrantes']) !!}
                             </div>
                             <div class="col-md-4"> <label class="form-check-label" for="defaultCheckPalestrantes">
                               Não se aplica
@@ -376,7 +378,7 @@
                         <div class="form-group row">
                           <div class="form-check col-12 text-left">
                             <div class="col-md-2">
-                                {!! Form::checkbox('inlineCheckMonitores', null, (isset($editarRelatorio) && count($editarRelatorio->getCriterios) <= 0) ? 1 : 0, ['class' => 'form-check-input ml-1', 'onClick' => 'check(this.id)', 'id' => 'defaultCheckMonitores']) !!}
+                                {!! Form::checkbox('inlineCheckMonitores', null, (isset($editarRelatorio) && count($editarRelatorio->getMonitor) <= 0) ? 1 : 0, ['class' => 'form-check-input ml-1', 'onClick' => 'check(this.id)', 'id' => 'defaultCheckMonitores']) !!}
                             </div>
                             <div class="col-md-4"> <label class="form-check-label" for="defaultCheckMonitores">
                               Não se aplica
@@ -436,7 +438,7 @@
                         <div class="form-group row">
                           <div class="form-check col-12 text-left">
                             <div class="col-md-2">
-                                {!! Form::checkbox('inlineCheckExpositores', null, (isset($editarRelatorio) && count($editarRelatorio->getCriterios) <= 0) ? 1 : 0, ['class' => 'form-check-input ml-1', 'onClick' => 'check(this.id)', 'id' => 'defaultCheckExpositores']) !!}
+                                {!! Form::checkbox('inlineCheckExpositores', null, (isset($editarRelatorio) && count($editarRelatorio->getExpositor) <= 0) ? 1 : 0, ['class' => 'form-check-input ml-1', 'onClick' => 'check(this.id)', 'id' => 'defaultCheckExpositores']) !!}
                             </div>
                             <div class="col-md-4"> <label class="form-check-label" for="defaultCheckExpositores">
                               Não se aplica
@@ -506,7 +508,7 @@
                       <div class="form-group row">
                         <div class="form-check col-12 text-left">
                           <div class="col-md-2">
-                              {!! Form::checkbox('inlineCheckMinistrantes', null, (isset($editarRelatorio) && count($editarRelatorio->getCriterios) <= 0) ? 1 : 0, ['class' => 'form-check-input ml-1', 'onClick' => 'check(this.id)', 'id' => 'defaultCheckMinistrantes']) !!}
+                              {!! Form::checkbox('inlineCheckMinistrantes', null, (isset($editarRelatorio) && count($editarRelatorio->getMinistrante) <= 0) ? 1 : 0, ['class' => 'form-check-input ml-1', 'onClick' => 'check(this.id)', 'id' => 'defaultCheckMinistrantes']) !!}
                           </div>
                           <div class="col-md-4"> <label class="form-check-label" for="defaultCheckMinistrantes">
                             Não se aplica
@@ -573,7 +575,7 @@
                       <div class="form-group row">
                         <div class="form-check col-12 text-left">
                           <div class="col-md-2">
-                              {!! Form::checkbox('inlineCheckParticipantes', null, (isset($editarRelatorio) && count($editarRelatorio->getCriterios) <= 0) ? 1 : 0, ['class' => 'form-check-input ml-1', 'onClick' => 'check(this.id)', 'id' => 'defaultCheckParticipantes']) !!}
+                              {!! Form::checkbox('inlineCheckParticipantes', null, (isset($editarRelatorio) && count($editarRelatorio->getParticipante) <= 0) ? 1 : 0, ['class' => 'form-check-input ml-1', 'onClick' => 'check(this.id)', 'id' => 'defaultCheckParticipantes']) !!}
                           </div>
                           <div class="col-md-4"> <label class="form-check-label" for="defaultCheckParticipantes">
                             Não se aplica
@@ -633,7 +635,7 @@
                        <div class="form-group row">
                          <div class="form-check col-12 text-left">
                            <div class="col-md-2">
-                               {!! Form::checkbox('inlineCheckOuvintes', null, (isset($editarRelatorio) && count($editarRelatorio->getCriterios) <= 0) ? 1 : 0, ['class' => 'form-check-input ml-1', 'onClick' => 'check(this.id)', 'id' => 'defaultCheckOuvintes']) !!}
+                               {!! Form::checkbox('inlineCheckOuvintes', null, (isset($editarRelatorio) && count($editarRelatorio->getOuvinte) <= 0) ? 1 : 0, ['class' => 'form-check-input ml-1', 'onClick' => 'check(this.id)', 'id' => 'defaultCheckOuvintes']) !!}
                            </div>
                            <div class="col-md-4"> <label class="form-check-label" for="defaultCheckOuvintes">
                              Não se aplica

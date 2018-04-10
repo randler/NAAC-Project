@@ -34,7 +34,7 @@
                                     @can('autor')
                                         <a class="btn btn-success" href="{{route('visualizar-relatorio', [$relatorio->id])}}"> Ver <i class="fas fa-search"></i> </a>
                                     @else
-                                        <a class="btn btn-success" href="{{route('corrigir-relatorio', [$relatorio->id])}}"> Abrir <i class="fas fa-search"></i> </a> 
+                                        <a class="btn btn-success" href="{{route('corrigir-relatorio-admin', [$relatorio->id])}}"> Abrir <i class="fas fa-search"></i> </a> 
                                     @endcan
                                 @elseif ($relatorio->status_relatorio == 'Indeferido' || $relatorio->status_relatorio == 'Recorrigir')
                                     @can('autor')
@@ -46,7 +46,7 @@
                                     @can('autor')
                                         <a class="btn btn-info disabled" disabled href="#"> Aguarde... <i class="fas fa-history"></i> </a>
                                     @else
-                                        <a class="btn btn-primary" href="{{route('corrigir-relatorio', [$relatorio->id])}}"> Abrir <i class="fa fa-edit"></i> </a>  
+                                        <a class="btn btn-primary" href="{{route('corrigir-relatorio-admin', [$relatorio->id])}}"> Abrir <i class="fa fa-edit"></i> </a>  
                                     @endcan
                                     
                                 @endif   

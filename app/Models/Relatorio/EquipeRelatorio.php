@@ -44,4 +44,23 @@ class EquipeRelatorio extends Model
             'message' => 'Erro ao tentar inserir dados da Equipe.'
         ];
     }
+
+    public function atualizar(Array $request): Array
+    {
+        //dd($request, $this->where('id', $request['id'])->first());
+        if ($this->where('relatorio_id', $request['id'])->first() == null) {
+            return $this->salvar($request['id'], $request);
+        } else {
+            $delete = $this->where('relatorio_id',$request['id'])->delete();
+
+            if ($delete) {
+                return $this->salvar($request['id'], $request);
+            } else {
+                return [
+                    'success' => false,
+                    'message' => 'erro ao tentar excluir dados do equipe'
+                ];
+            }
+        }
+    }
 }
