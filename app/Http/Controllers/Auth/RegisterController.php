@@ -53,14 +53,15 @@ class RegisterController extends Controller
     protected function validator(array $data)
     {
         return Validator::make($data, [
-            'name'          => 'required|string|max:255',
-            'email'         => 'required|string|email|max:255|unique:users',
-            'instituicao'   => 'required|string|max:255',
-            'cpf'           => 'required|string|max:14',
-            'area_atuacao'  => 'required|string|max:255',
-            'curso'         => 'required|string|max:255',
-            'funcao'        => 'required|string|max:255',
-            'password'      => 'required|string|min:6|confirmed',
+            'name'                  => 'required|string|max:255',
+            'email'                 => 'required|string|email|max:255|unique:users',
+            'instituicao'           => 'required|string|max:255',
+            'cpf'                   => 'required|string|max:14',
+            'area_atuacao'          => 'required|string|max:255',
+            'curso'                 => 'required|string|max:255',
+            'funcao'                => 'required|string|max:255',
+            'password'              => 'required|string|min:6|confirmed',
+            'g-recaptcha-response'  => 'required|recaptcha',
         ]);
     }
 
@@ -89,14 +90,16 @@ class RegisterController extends Controller
         if ($user) {
 
             $dadosEmail = (object) Array (
-                'para'      => 'naac.ftc.sac@gmail.com',
-                'assunto'   => '[Novo Usuário Cadastrado]',
-                'title'     => 'Projeto Corrigido',
-                'mensagem'  => 'Usuário ' . $data['name'] . ' Cadastrado.',
-                'titulo'    => 'Novo usuário',
-                'autor'     => $data['name'],
-                'tipo'      => 'novo-usuario',
-                'link'      => route('request-users')
+                'para'          => 'naac.ftc.sac@gmail.com',
+                'assunto'       => '[Novo Usuário Cadastrado]',
+                'title'         => 'Novo Usuário',
+                'title_message' => 'Há um novo usuário cadastrado ele aguarda a liberação para ter acesso ao sistema.',
+                'descricao'     => 'Usuário ' . $data['name'] . ' Cadastrado.',
+                'titulo'        => 'Novo usuário',
+                'status'        => 'new-user',
+                'autor'         => $data['name'],
+                'tipo'          => 'novo-usuario',
+                'link'          => route('request-users')
             );
 
             $this->sendEmail($dadosEmail);

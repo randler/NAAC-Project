@@ -12,6 +12,7 @@ class SendNotifications extends Mailable
     use Queueable, SerializesModels;
 
     public $dadosEmail;
+    public $link_face = 'http://www.facebook.com/'; 
 
     /**
      * Create a new message instance.

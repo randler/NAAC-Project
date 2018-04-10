@@ -136,6 +136,12 @@
                                 <input id="password-confirm" type="password" placeholder="Confirme a senha anterior" class="form-control" name="password_confirmation" required>
                             </div>
                         </div>
+                        <!--div class="form-group row">
+                            <div class="col-md-3"></div>
+                            <div class="col-md-7">
+                                {!! Recaptcha::render() !!}
+                            </div>
+                        </div-->
 
                         <div class="form-group row mb-0">
                             <div class="col-md-7 offset-md-3">

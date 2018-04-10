@@ -19,8 +19,11 @@ Auth::routes();
 $this->get('/', 'HomeController@index')->name('index');
 $this->get('/contato',  'HomeController@contact')->name('contact');
 $this->get('/inicio',   'HomeController@home')->middleware('auth', 'auth.unique.user')->name('home');
+
 $this->post('/apagar-notificacoes', 'HomeController@apagarTodasNotificacoes')->name('apagar-notificacoes');
 $this->post('/perfil',  'User\PerfilController@update')->middleware('auth', 'auth.unique.user')->name('update-user');
+$this->post('send-contact', 'Admin\ContatoController@sendEmailContact')->name('send-contact');
+
 $this->get('/perfil',   'User\PerfilController@index')->middleware('auth', 'auth.unique.user')->name('perfil');
 $this->get('/download-projeto/{id}',    'Projeto\DownloadController@downloadProjetoPDF')->middleware('auth', 'auth.unique.user')->name('download-projeto');
 $this->get('/download-lista/{id}',      'Projeto\DownloadController@downloadListaPDF')->middleware('auth', 'auth.unique.user')->name('download-lista');

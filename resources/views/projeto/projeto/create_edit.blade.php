@@ -703,7 +703,7 @@
                     <div class="form-group row"> 
                       <label class="col-sm-2 col-form-label text-left">Retorno da proposta</label>
                       <div class="col-sm-10"> 
-                        {!! Form::textarea('retorno_proposta', null, ['class' => 'form-control', 'placeholder' => 'Descrever os beneficios que este trabalho trará para a comunidade acadêmica e/ou conquistense ', 'rows' => '5', 'id' => 'inputProposta']) !!}
+                        {!! Form::textarea('retorno_proposta', null, ['class' => 'form-control', 'placeholder' => 'Descrever os beneficios que este trabalho trará para a comunidade acadêmica e/ou conquistense ', 'rows' => '5', 'resize' => 'none', 'id' => 'inputProposta']) !!}
                       </div>
                     </div>
                   </div>

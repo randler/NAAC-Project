@@ -26,7 +26,7 @@
       </div>
       <div class="row">
         <div class="col-md-12 mt-3">
-          <p class="text-center">© Copyright 2017 Pingendo - All rights reserved. </p>
+          <p class="text-center">© Copyright 2017 Pingendo - All rights reserved. <a class="text-white" href='https://br.freepik.com' >Designed by Freepik</a> </p>
         </div>
       </div>
     </div>

@@ -12,11 +12,18 @@
         <div class="col-md-3"></div>
         <div class="col-md-6">
           <p class="lead mb-4">Preencha os dados e clique em enviar</p>
-          <form class="" method="post" action="#">
+          {!! Form::open(['route' => 'send-contact', 'class' => 'form', 'id' => 'form-contact']) !!}
             <div class="form-group"> <label>E-mail</label>
-              <input type="email" name="email" class="form-control" placeholder="Digite o seu e-mail"> </div>
-            <div class="form-group"> <label>Mensagem</label> <textarea type="text" name="mensagem" class="form-control" placeholder="Digite aqui a sua mensagem" rows="10"></textarea> </div>
-            <button type="submit" class="btn btn-primary">Enviar <i class="fa fa-paper-plane"></i></button>
+              {!! Form::email('email', null, ['class' => 'form-control', 'placeholder' => 'Digite o seu e-mail']) !!} 
+            </div>
+            <div class="form-group"> 
+              <label>Mensagem</label>
+              {!! Form::textarea('mensagem', null, ['class' => 'form-control', 'placeholder' => 'Digite aqui a sua mensagem', 'rows' => '10','style' => 'resize: none']) !!} 
+            </div>
+            <div class="form-group">
+              {!! Recaptcha::render() !!}
+            </div>
+            {!! Form::button('Enviar <i class="fa fa-paper-plane"></i>', ['type' => 'submit', 'class' => 'btn btn-primary']) !!}
           </form>
         </div>
       </div>

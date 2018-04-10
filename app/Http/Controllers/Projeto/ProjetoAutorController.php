@@ -31,14 +31,16 @@ class ProjetoAutorController extends Controller
         $responseSave = $projeto->salvarProjeto($dadosValidados);
         //compor e-mail
         $dadosEmail = (object) Array (
-            'para'      => 'naac.ftc.sac@gmail.com',
-            'assunto'   => '[NAAC - Novo Projeto Cadastrado]',
-            'title'     => 'Novo Projeto',
-            'mensagem'  => 'Um novo projeto foi adicionado',
-            'titulo'    => $request->titulo_projeto,
-            'autor'     => auth()->user()->name,
-            'tipo'      => 'novo-projeto',
-            'link'      => route('corrigir-project', [$responseSave['id']])
+            'para'          => 'naac.ftc.sac@gmail.com',
+            'assunto'       => '[NAAC - Novo Projeto Cadastrado]',
+            'title'         => 'Novo Projeto',
+            'title_message' => 'A um novo projeto cadastrado, na data ' . date('d/m/Y') . '. ',
+            'descricao'     => $request->objetivo_geral,
+            'titulo'        => $request->titulo_projeto,
+            'status'        => 'Enviado',
+            'autor'         => auth()->user()->name,
+            'tipo'          => 'novo-projeto',
+            'link'          => route('corrigir-project', [$responseSave['id']])
         );
         //se ocorrer tudo certo retorna a pagina principal com sucesso
         // caso não ele retorna ao formulário com os dados e com o especifico erro
@@ -158,15 +160,18 @@ class ProjetoAutorController extends Controller
          
         //dd($request->all());
         $responseUpdate = $projeto->userCorrigirProjeto($id, $request->all());
+
         $dadosEmail = (object) Array (
-            'para'      => 'naac.ftc.sac@gmail.com',
-            'assunto'   => '['. auth()->user()->name .' - Projeto Corrigido]',
-            'title'     => 'Projeto Corrigido',
-            'mensagem'  => 'O projeto '. $request->titulo_projeto .' foi corrigido.',
-            'titulo'    => $request->titulo_projeto,
-            'autor'     => auth()->user()->name,
-            'tipo'      => 'projeto-corrigido',
-            'link'      => route('corrigir-project', [$id])
+            'para'          => 'naac.ftc.sac@gmail.com',
+            'assunto'       => '['. auth()->user()->name .' - Projeto Corrigido]',
+            'title'         => 'Projeto Corrigido',
+            'title_message' => 'O projeto '. $request->titulo_projeto .' foi corrigido na data: ' . date('d/m/Y') . '. ',
+            'descricao'     => $request->objetivo_geral,
+            'titulo'        => $request->titulo_projeto,
+            'status'        => 'Corrigido',
+            'autor'         => auth()->user()->name,
+            'tipo'          => 'projeto-corrigido',
+            'link'          => route('corrigir-project', [$id])
         );
         //dd($responseUpdate);
         if($responseUpdate['success']) {

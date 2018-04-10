@@ -145,16 +145,18 @@ class ProjetoAdminController extends Controller
         $dados_user = User::where('id', $user_id)->get()->first(); 
         $email_user = $dados_user->email;
         //dd(route('corrigir-projeto-user', [$id]));
-        
+       
         $dadosEmail = (object) Array (
-            'para'      => $email_user,
-            'assunto'   => '[NAAC - Status Projeto '. $dadosProjeto->titulo_projeto .']',
-            'title'     => 'Projeto Deferido',
-            'mensagem'  => 'Parabéns o projeto '. $dadosProjeto->titulo_projeto .' foi deferido.',
-            'titulo'    => $dadosProjeto->titulo_projeto,
-            'autor'     => $dados_user->name,
-            'tipo'      => 'projeto-deferido',
-            'link'      => route('visualizar-projeto', [$id])
+            'para'          => $email_user,
+            'assunto'       => '[NAAC - Status Projeto '. $dadosProjeto->titulo_projeto .']',
+            'title'         => 'Projeto Deferido',
+            'title_message' => 'Parabéns o projeto '. $dadosProjeto->titulo_projeto .' foi deferido na data: ' . date('d/m/Y') . '. ',
+            'descricao'     => $dadosProjeto->objetivo_geral,
+            'titulo'        => $dadosProjeto->titulo_projeto,
+            'status'        => 'Deferido',
+            'autor'         => $dados_user->name,
+            'tipo'          => 'projeto-deferido',
+            'link'          => route('visualizar-projeto', [$id])
         );
 
         $retornoDeferir = $projeto->deferir($id);
@@ -181,16 +183,18 @@ class ProjetoAdminController extends Controller
         
         $dados_user = User::where('id', $user_id)->get()->first(); 
         $email_user = $dados_user->email;
-        
+
         $dadosEmail = (object) Array (
-            'para'      => $email_user,
-            'assunto'   => '[NAAC - Status Projeto '. $request->titulo_projeto .']',
-            'title'     => 'Projeto Indeferido',
-            'mensagem'  => 'O projeto '. $request->titulo_projeto .' precisa de correções.',
-            'titulo'    => $request->titulo_projeto,
-            'autor'     => $dados_user->name,
-            'tipo'      => 'projeto-indeferido',
-            'link'      => route('corrigir-projeto-user', [$id])
+            'para'          => $email_user,
+            'assunto'       => '[NAAC - Status Projeto '. $request->titulo_projeto .']',
+            'title'         => 'Projeto Indeferido',
+            'title_message' => 'O projeto '. $request->titulo_projeto .'  foi corrigido e encontramos algumas correções a serem feitas.',
+            'descricao'     => $request->objetivo_geral,
+            'titulo'        => $request->titulo_projeto,
+            'status'        => 'Indeferido',
+            'autor'         => $dados_user->name,
+            'tipo'          => 'projeto-indeferido',
+            'link'          => route('corrigir-projeto-user', [$id])
         );
 
         $responseCorrigir = $projeto->salvarCorrecaoAdmin($correcaoForm, $id);
