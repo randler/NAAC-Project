@@ -42,7 +42,13 @@
                             <table border="0" cellpadding="0" cellspacing="0" width="100%">
                               <tr>
                               <td align="center">
+                                @if ($dadosEmail->status == 'new-user')
+                                  <img src="{{ $message->embed(public_path() . '/assets/img/time.png') }}" alt="" width="105" height="134" style="display: block;" />
+                                @elseif($dadosEmail->status == 'contact')
+                                  <img src="{{ $message->embed(public_path() . '/assets/img/talk.png') }}" alt="" width="105" height="134" style="display: block;" />
+                                @else
                                 <img src="{{ $message->embed(public_path() . '/assets/img/arquivo.png') }}" alt="" width="105" height="134" style="display: block;" />
+                                @endif
                               </td>
                               </tr>
                               <tr>
@@ -50,7 +56,13 @@
                                 <table border="0" cellpadding="0" cellspacing="0" width="100%">
                                   <tr>
                                     <td style="color: #153643; font-family: Arial, sans-serif; font-size: 16px; line-height: 20px;" width="70%"><b>Título:</b> {{$dadosEmail->titulo}}</td>
-                                    <td style="color: #153643; font-family: Arial, sans-serif; font-size: 16px; line-height: 20px;" width="30%"><b>Status:</b> {{$dadosEmail->status}}</td>
+                                    <td style="color: #153643; font-family: Arial, sans-serif; font-size: 16px; line-height: 20px;" width="30%"><b>Status:</b> 
+                                    @if ($dadosEmail->status == 'new-user')
+                                      {{$dadosEmail->titulo}}
+                                    @else
+                                      {{$dadosEmail->status}}
+                                    @endif  
+                                    </td>
                                   </tr>
                                 </table> 
                               </td>
@@ -67,9 +79,6 @@
                               </tr>
                               <tr>
                                 <td style="padding: 30px 30px 30px 30px; color: #153643; font-family: Arial, sans-serif; font-size: 16px; line-height: 20px;" align="center">
-                                @if ($dadosEmail->tipo == 'novo-usuario')
-                                  <a class="btn btn-block btn-primary" href="{{$dadosEmail->link}}"> Ver <i class="fas fa-user"></i></a>
-                                @else
                                   @if ($dadosEmail->status == 'Enviado' || $dadosEmail->status == 'new-user' || $dadosEmail->status == 'Corrigido' || $dadosEmail->status == 'Deferido')
                                   <a href="{{$dadosEmail->link}}">
                                     <img src="{{ $message->embed(public_path() . '/assets/img/success.png') }}" alt="" width="150" height="45" style="display: block;" />
@@ -80,7 +89,6 @@
                                       <img src="{{ $message->embed(public_path() . '/assets/img/error.png') }}" alt="" width="150" height="45" style="display: block;" />
                                     </a>
                                   @endif
-                                @endif
                                 </td>
                               </tr>
                             </table>
