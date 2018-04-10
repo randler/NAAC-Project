@@ -11,6 +11,7 @@ use App\Http\Requests\Projeto\ProjetoFormRequest;
 
 use Validator;
 use Mail;
+use App\User;
 
 class ProjetoAutorController extends Controller
 {
@@ -23,7 +24,7 @@ class ProjetoAutorController extends Controller
     /* METODO PARA SALVAR UM NOVO PROJETO DO AUTOR
         Irá validar os dados e então salvar no banco
     */
-    public function salvarProjeto(ProjetoFormRequest $request, Projeto $projeto)
+    public function salvarProjeto(ProjetoFormRequest $request, Projeto $projeto, User $user)
     {
         //recupera os dados menos o token do formulario
         $dadosValidados = $request->validated();
@@ -31,7 +32,7 @@ class ProjetoAutorController extends Controller
         $responseSave = $projeto->salvarProjeto($dadosValidados);
         //compor e-mail
         $dadosEmail = (object) Array (
-            'para'          => 'naac.ftc.sac@gmail.com',
+            'para'          => $user->where('admin', true)->get()->first()->email,
             'assunto'       => '[NAAC - Novo Projeto Cadastrado]',
             'title'         => 'Novo Projeto',
             'title_message' => 'A um novo projeto cadastrado, na data ' . date('d/m/Y') . '. ',
@@ -151,7 +152,7 @@ class ProjetoAutorController extends Controller
      * será reenviado para o administrador como "reenviado" 
      *  
      */
-    public function atualizarCorrecaoProjeto(int $id, ProjetoFormRequest $request, Projeto $projeto)
+    public function atualizarCorrecaoProjeto(int $id, ProjetoFormRequest $request, Projeto $projeto, User $user)
     {
         if (!auth()->user()->projects()->find($id))
             return redirect()
@@ -162,7 +163,7 @@ class ProjetoAutorController extends Controller
         $responseUpdate = $projeto->userCorrigirProjeto($id, $request->all());
 
         $dadosEmail = (object) Array (
-            'para'          => 'naac.ftc.sac@gmail.com',
+            'para'          => $user->where('admin', true)->get()->first()->email,
             'assunto'       => '['. auth()->user()->name .' - Projeto Corrigido]',
             'title'         => 'Projeto Corrigido',
             'title_message' => 'O projeto '. $request->titulo_projeto .' foi corrigido na data: ' . date('d/m/Y') . '. ',
