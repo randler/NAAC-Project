@@ -40,6 +40,7 @@
                 <label for="email" class="col-md-3 col-form-label text-md-right">E-mail</label>
 
                 <div class="col-md-7">
+                    <input type="hidden" name="old_email" value="{{ $user->email }}">
                     <input id="email" type="email" placeholder="Digite o e-mail" class="form-control{{ $errors->has('email') ? ' is-invalid' : '' }}" name="email" value="{{ $user->email }}" required>
 
                     @if ($errors->has('email'))

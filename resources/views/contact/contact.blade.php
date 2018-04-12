@@ -24,7 +24,7 @@
               {!! Recaptcha::render() !!}
             </div>
             {!! Form::button('Enviar <i class="fa fa-paper-plane"></i>', ['type' => 'submit', 'class' => 'btn btn-primary']) !!}
-          </form>
+          {!! Form::close()!!}
         </div>
       </div>
     </div>

@@ -52,9 +52,10 @@ class User extends Authenticatable
     public function atualizarUsuario($user): Array
     {
         DB::beginTransaction();
-        $updateUser = $this->where('email', $user['email'])->first();
+        $updateUser = $this->where('email', $user['old_email'])
+                            ->first();
         //$updateUser = $user;
-        //dd($user);
+        //dd($updateUser);
         $update = $updateUser->update($user);
 
         if ($update) {

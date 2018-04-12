@@ -90,7 +90,7 @@ class RegisterController extends Controller
         if ($user) {
 
             $dadosEmail = (object) Array (
-                'para'          => 'naac.ftc.sac@gmail.com',
+                'para'          => $user->where('admin', true)->get()->first()->email,
                 'assunto'       => '[Novo Usuário Cadastrado]',
                 'title'         => 'Novo Usuário',
                 'title_message' => 'Há um novo usuário cadastrado ele aguarda a liberação para ter acesso ao sistema.',
