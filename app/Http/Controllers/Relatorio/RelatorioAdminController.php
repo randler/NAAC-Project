@@ -31,8 +31,8 @@ class RelatorioAdminController extends Controller
 
     public function relatoriosCorrigir(Relatorio $relatorio)
     {
-        $messageTitle = 'Relatórios Reenviados';
-        $messageEmpty = 'Não há relatório(s) reenviado(s)';
+        $messageTitle = 'Relatórios a corrigir';
+        $messageEmpty = 'Não há relatório(s) a corrigir';
         $relatorios = $relatorio
                             ->where('status_relatorio', 'Reenviado')
                             ->get();
