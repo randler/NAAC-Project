@@ -38,7 +38,7 @@ class ProjetoAdminController extends Controller
     public function projetosSolicitados(Projeto $projetos)
     {
         $messageTitle = 'Projetos solicitados';
-        $messageEmpty = 'Não há projetos solicitados';
+        $messageEmpty = 'Não há projeto(s) solicitado(s)';
         $projetos = $projetos->where('status_projeto', 'Enviado')
                              ->get();
         //dd($projetos);                          
@@ -51,6 +51,8 @@ class ProjetoAdminController extends Controller
      */
     public function todosProjetos(Projeto $projeto)
     {
+        $messageTitle = 'Todos os Projetos';
+        $messageEmpty = 'Não há projeto(s) cadastrado(s)';
         $projetos = $projeto->all();
         //dd($projetos);
         return view('projeto.projeto.view', compact('projetos'));
@@ -66,7 +68,7 @@ class ProjetoAdminController extends Controller
         $projetos = $projeto->where('status_projeto', 'Reenviado')
                              ->get();
         $messageTitle = 'Projetos a corrigir';                             
-        $messageEmpty = 'Não há projetos a corrigir';                     
+        $messageEmpty = 'Não há projeto(s) a corrigir';                     
         //dd($projetos);
         return view('projeto.projeto.view', compact('projetos', 'messageEmpty', 'messageTitle'));
     }
@@ -81,7 +83,7 @@ class ProjetoAdminController extends Controller
         $projetos = $projeto->where('status_projeto', 'Deferido')
                              ->get();
         $messageTitle = 'Todos projetos deferidos';                             
-        $messageEmpty = 'Não há projetos deferidos';                     
+        $messageEmpty = 'Não há projeto(s) deferido(s)';                     
         //dd($projetos);
         return view('projeto.projeto.view', compact('projetos', 'messageEmpty', 'messageTitle'));
     }
