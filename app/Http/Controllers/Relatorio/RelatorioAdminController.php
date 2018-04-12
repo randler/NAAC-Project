@@ -18,6 +18,39 @@ class RelatorioAdminController extends Controller
         return view('relatorio.relatorio.view', compact('relatorios'));
     }
 
+    public function relatoriosSolicitados(Relatorio $relatorio)
+    {
+        $messageTitle = 'Relatórios solicitados';
+        $messageEmpty = 'Não há relatório(s) solicitado(s)';
+        $relatorios = $relatorio
+                            ->where('status_relatorio', 'Enviado')
+                            ->get();
+        //dd($relatorios);
+        return view('relatorio.relatorio.view', compact('relatorios', 'messageTitle', 'messageEmpty'));
+    }
+
+    public function relatoriosCorrigir(Relatorio $relatorio)
+    {
+        $messageTitle = 'Relatórios Reenviados';
+        $messageEmpty = 'Não há relatório(s) reenviado(s)';
+        $relatorios = $relatorio
+                            ->where('status_relatorio', 'Reenviado')
+                            ->get();
+                            
+        return view('relatorio.relatorio.view', compact('relatorios', 'messageTitle', 'messageEmpty'));
+    }
+
+    public function relatoriosDeferidos(Relatorio $relatorio)
+    {
+        $messageTitle = 'Relatórios Reenviados';
+        $messageEmpty = 'Não há relatorio(s) deferido(s)';
+        $relatorios = $relatorio
+                            ->where('status_relatorio', 'Deferido')
+                            ->get();
+
+        return view('relatorio.relatorio.view', compact('relatorios', 'messageTitle', 'messageEmpty'));
+    }
+
     public function exibirCorrigirRelatorioAdmin(int $id, $notify_id = '', Relatorio $relatorio)
     {
         $dadosRelatorio = $relatorio

@@ -7,19 +7,19 @@ use Illuminate\Notifications\Notification;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 
-class ProjetoNotification extends Notification
+class RelatorioNotification extends Notification
 {
     use Queueable;
-    private $projeto;
+    private $relatorio;
 
     /**
      * Create a new notification instance.
      *
      * @return void
      */
-    public function __construct($projeto)
+    public function __construct($relatorio)
     {
-        $this->projeto = $projeto;
+        $this->relatorio = $relatorio;
     }
 
     /**
@@ -42,9 +42,9 @@ class ProjetoNotification extends Notification
     public function toArray($notifiable)
     {
         return [
-            'id'        => $this->projeto->id,
-            'status'    => $this->projeto->status_projeto,
-            'titulo'    => $this->projeto->titulo_projeto,
+            'id'      => $this->relatorio->id,
+            'status'  => $this->relatorio->status_relatorio,
+            'titulo'  => $this->relatorio->titulo,
         ];
     }
 }

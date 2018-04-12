@@ -15,7 +15,7 @@
         <div class="col-md-8">
           <div class="col-md-12 text-center">
             <h4 class="">Formulário NAAC-DOC-002 Versão 1.0</h4>
-            <h5 class="">Projetos de Extensão de Extensão de Curta Duração</h5>
+            <h5 class="">Projetos de Extensão de Curta Duração</h5>
           </div>
         </div>
         <div class="col-md-2 text-right p-3">

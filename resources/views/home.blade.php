@@ -151,7 +151,7 @@
         <div class="py-5 col-md-6">
           <div class="row">
             <div class="text-center col-3 col-sm-2 col-md-3 col-lg-2 col-xl-2">
-                <a href="#" class="text-secondary" style="text-decoration:none; "><i class="d-block mx-auto fa-5x far fa-copy"></i></a></div>
+                <a href="{{route('projetos-solicitados')}}" class="text-secondary" style="text-decoration:none; "><i class="d-block mx-auto fa-5x far fa-copy"></i></a></div>
             <div class="col-9">
               <a href="{{route('projetos-solicitados')}}" class="text-secondary" style="text-decoration:none; ">
                   <h3 class="m-4"><b>Projetos Solicitados</b></h3></a>
@@ -161,7 +161,17 @@
         <div class="py-5 col-md-6">
           <div class="row">
             <div class="text-center col-3 col-sm-2 col-md-3 col-lg-2 col-xl-2">
-                <a href="#" class="text-secondary" style="text-decoration:none; "><i class="d-block mx-auto fa-5x fas fa-edit"></i></a></div>
+                <a href="{{route('relatorios-solicitados')}}" class="text-secondary" style="text-decoration:none; "><i class="d-block mx-auto fa-5x far fa-copy"></i></a></div>
+            <div class="col-9">
+              <a href="{{route('relatorios-solicitados')}}" class="text-secondary" style="text-decoration:none; ">
+                  <h3 class="m-4"><b>Relatórios Solicitados</b></h3></a>
+            </div>
+          </div>
+        </div>
+        <div class="py-5 col-md-6">
+          <div class="row">
+            <div class="text-center col-3 col-sm-2 col-md-3 col-lg-2 col-xl-2">
+                <a href="{{route('projetos-reenviados')}}" class="text-secondary" style="text-decoration:none; "><i class="d-block mx-auto fa-5x fas fa-edit"></i></a></div>
             <div class="col-9">
               <a href="{{route('projetos-reenviados')}}" class="text-secondary" style="text-decoration:none; ">
                   <h3 class="m-4"><b>Projetos Corrigidos</b></h3></a>
@@ -171,10 +181,30 @@
         <div class="py-5 col-md-6">
           <div class="row">
             <div class="text-center col-3 col-sm-2 col-md-3 col-lg-2 col-xl-2">
-                <a href="#" class="text-secondary" style="text-decoration:none; "><i class="d-block mx-auto fa-5x far fa-file"></i></a></div>
+                <a href="{{route('relatorios-reenviados')}}" class="text-secondary" style="text-decoration:none; "><i class="d-block mx-auto fa-5x fas fa-edit"></i></a></div>
+            <div class="col-9">
+              <a href="{{route('relatorios-reenviados')}}" class="text-secondary" style="text-decoration:none; ">
+                  <h3 class="m-4"><b>Relatórios Corrigidos</b></h3></a>
+            </div>
+          </div>
+        </div>
+        <div class="py-5 col-md-6">
+          <div class="row">
+            <div class="text-center col-3 col-sm-2 col-md-3 col-lg-2 col-xl-2">
+                <a href="{{route('projetos-deferidos')}}" class="text-secondary" style="text-decoration:none; "><i class="d-block mx-auto fa-5x far fa-file"></i></a></div>
             <div class="col-9">
               <a href="{{route('projetos-deferidos')}}" class="text-secondary" style="text-decoration:none; ">
                   <h3 class="m-4"><b>Projetos Deferidos</b></h3></a>
+            </div>
+          </div>
+        </div>
+        <div class="py-5 col-md-6">
+          <div class="row">
+            <div class="text-center col-3 col-sm-2 col-md-3 col-lg-2 col-xl-2">
+                <a href="{{route('relatorios-deferidos')}}" class="text-secondary" style="text-decoration:none; "><i class="d-block mx-auto fa-5x far fa-file"></i></a></div>
+            <div class="col-9">
+              <a href="{{route('relatorios-deferidos')}}" class="text-secondary" style="text-decoration:none; ">
+                  <h3 class="m-4"><b>Relatórios Deferidos</b></h3></a>
             </div>
           </div>
         </div>

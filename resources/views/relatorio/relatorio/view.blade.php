@@ -20,15 +20,29 @@
                     <div class="card">
                         <div class="card-header">Autor: {{$relatorio->coordenador_projeto}}</div>
                         <div class="card-body">
-                            <h4>Título: {{$relatorio->titulo}}</h4> 
+                            <h4 class="d-inline-block text-truncate" style="max-width: 273px;">
+                                @can('autor')
+                                <a class="text-dark" style="text-decoration: none;" href="{{route('visualizar-relatorio', [$relatorio->id])}}">
+                                    Título: {{$relatorio->titulo}}
+                                </a>
+                                @else
+                                <a class="text-dark" style="text-decoration: none;" href="{{route('corrigir-relatorio-admin', [$relatorio->id])}}">
+                                    Título: {{$relatorio->titulo}}
+                                </a>
+                                @endcan
+                            </h4> 
                             @if ($relatorio->status_relatorio == 'Deferido')
-                                <h6 class="text-muted">Status: <span class="badge badge-success">{{$relatorio->status_relatorio}}</span></h6>
+                                <h6 class="text-muted">Status: <span class="badge badge-success">{{$relatorio->status_relatorio}}</span>
+                                <a href="{{route('download-relatorio', [$relatorio->id])}}" title="Baixar Relatório" style="text-decoration: none"> 
+                                    <span class="badge badge-warning"><i class="fas fa-download"></i></span>
+                                </a>
+                                </h6>
                             @elseif ($relatorio->status_relatorio == 'Indeferido' || $relatorio->status_relatorio == 'Recorrigir')
                                 <h6 class="text-muted">Status: <span class="badge badge-danger">{{$relatorio->status_relatorio}}</span></h6>
                             @elseif ($relatorio->status_relatorio == 'Enviado'|| $relatorio->status_relatorio == 'Reenviado')
                                 <h6 class="text-muted">Status: <span class="badge badge-info">{{$relatorio->status_relatorio}}</span></h6>
                             @endif    
-                            <h6 class="text-muted">Objetivo: </h6><p class=" p-y-1">{{$relatorio->objetivo_geral}}</p>
+                            <h6 class="text-muted">Objetivo: </h6><p class="p-y-1 d-inline-block text-truncate" style="max-width: 273px;">{{$relatorio->objetivo_geral}}</p>
                             <div class="text-right">
                                 @if ($relatorio->status_relatorio == 'Deferido')
                                     @can('autor')

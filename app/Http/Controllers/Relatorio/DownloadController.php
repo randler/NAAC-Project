@@ -11,10 +11,11 @@ use PDF;
 
 class DownloadController extends Controller
 {
-    public function downloadProjetoPDF(int $id, Relatorio $relatorio)
+    public function downloadRelatorioPDF(int $id, Relatorio $relatorio)
     {
-        $dadorRelatorio = $relatorio->where('id', $id)
+        $dadosRelatorio = $relatorio->where('id', $id)
                                     ->with([
+                                        'getProjeto',
                                         'getCoordenador',
                                         'getCronograma',
                                         'getEquipeRelatorio',
@@ -27,10 +28,11 @@ class DownloadController extends Controller
                                     ->get()
                                     ->first();
         
+        //dd($dadosRelatorio);
         PDF::setOptions(['dpi' => 150, 'defaultFont' => 'Courier']);
         
         return PDF::loadView('download.relatorio', 
-                    compact('dadorRelatorio'))
-                    ->download("NAAC-DOC-003 - Relatório de Projeto de Extensão -{$dadorRelatorio->titulo }.pdf");
+                    compact('dadosRelatorio'))
+                    ->download("{$dadosRelatorio->getProjeto->numero_registro_naac} - NAAC-DOC-003 - Relatório de Projeto de Extensão - {$dadosRelatorio->titulo }.pdf");
     }
 }

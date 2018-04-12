@@ -273,7 +273,7 @@
                           <div class="form-group row">
                               <div class="col-sm-2 col-form-label"></div>
                               <div class="col-sm-10">
-                                  <a href="#content-criterio" class="mr-12 btn btn-block btn-success" onClick="preencheTabela([inputNomeEquipe, inputCHEquipe], 'table-equipe_organizadora')">Adicionar</a>
+                                  <a href="#content-Equipe" class="mr-12 btn btn-block btn-success" onClick="preencheTabela([inputNomeEquipe, inputCHEquipe], 'table-equipe_organizadora')">Adicionar</a>
                               </div>
                             </div>
                           <div class="form-group row">
@@ -405,7 +405,7 @@
                             </div>
                           <div class="form-group row">
                             <div class="col-form-label col-md-2 col-lg-2"></div>
-                            <div class="col-form-label col-12 col-sm-12 col-md-10 col-lg-10 ml-0 ">
+                            <div class="col-form-label col-12 col-sm-12 col-md-10 col-lg-10 ml-0">
                               <table id="table-monitores" class="table table-hover table-striped table-responsive">
                                 <thead>
                                   <tr>
@@ -607,7 +607,7 @@
                               <thead>
                                 <tr>
                                   <th>#</th>
-                                  <th class="w-50">Nome</th>
+                                  <th class="w-75">Nome</th>
                                   <th class="w-25">Carga horária</th>
                                   <th class="">Ações</th>
                                 </tr>
@@ -667,7 +667,7 @@
                                <thead>
                                  <tr>
                                    <th>#</th>
-                                   <th class="w-50">Nome</th>
+                                   <th class="w-75">Nome</th>
                                    <th class="w-25">Carga horária</th>
                                    <th class="">Ações</th>
                                  </tr>
@@ -1049,7 +1049,7 @@
                 } else if (j > 0  && j < (numOfCols-1) && j <= array.length){
                   dadosTabela += array[j-1].value + '|'; 
                   if (array[j-1].id.includes('CH'))
-                    newCell.innerHTML = array[j-1].value + ' h';
+                    newCell.innerHTML = array[j-1].value;
                   else
                     newCell.innerHTML = array[j-1].value;
                 } else if (j == (numOfCols-1)) {
@@ -1081,7 +1081,9 @@
                     if(i == 0 && row == -1) {
                       cells[i].innerHTML = j;
                     }
-                    if (i == (cells.length - 1)) {
+                    if (i > 0 && i < (cells.length - 1)){
+                      dadosTabela += cells[i].innerHTML + '|'; 
+                    } else if (i == (cells.length - 1)) {
                       cells[i].innerHTML = "<i class='fa fa-trash text-danger' onClick='remover(" + j + ", \"" + tableID + "\")'></i>";
                     }
                   }

@@ -12,7 +12,7 @@ class SendNotifications extends Mailable
     use Queueable, SerializesModels;
 
     public $dadosEmail;
-    public $link_face = 'http://www.facebook.com/'; 
+    public $link_face = 'http://www.facebook.com/';
 
     /**
      * Create a new message instance.
@@ -31,7 +31,7 @@ class SendNotifications extends Mailable
      */
     public function build()
     {
-        return $this->view('email.body-mail')
+        return $this->view('email.projeto_relatorio-mail')
                     ->subject($this->dadosEmail->assunto);
     }
 }

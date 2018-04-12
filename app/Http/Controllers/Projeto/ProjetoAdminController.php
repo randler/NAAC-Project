@@ -40,7 +40,6 @@ class ProjetoAdminController extends Controller
         $messageTitle = 'Projetos solicitados';
         $messageEmpty = 'Não há projetos solicitados';
         $projetos = $projetos->where('status_projeto', 'Enviado')
-                             ->orWhere('status_projeto', 'Reenviado')
                              ->get();
         //dd($projetos);                          
         return view('projeto.projeto.view', compact('projetos', 'messageTitle', 'messageEmpty'));
@@ -139,30 +138,10 @@ class ProjetoAdminController extends Controller
 
     public function deferirProjeto($id, Projeto $projeto)
     {
-        $dadosProjeto = $projeto->where('id', $id)->get()->first();
-        $user_id = $dadosProjeto->user_id;
-        
-        $dados_user = User::where('id', $user_id)->get()->first(); 
-        $email_user = $dados_user->email;
         //dd(route('corrigir-projeto-user', [$id]));
-       
-        $dadosEmail = (object) Array (
-            'para'          => $email_user,
-            'assunto'       => '[NAAC - Status Projeto '. $dadosProjeto->titulo_projeto .']',
-            'title'         => 'Projeto Deferido',
-            'title_message' => 'Parabéns o projeto '. $dadosProjeto->titulo_projeto .' foi deferido na data: ' . date('d/m/Y') . '. ',
-            'descricao'     => $dadosProjeto->objetivo_geral,
-            'titulo'        => $dadosProjeto->titulo_projeto,
-            'status'        => 'Deferido',
-            'autor'         => $dados_user->name,
-            'tipo'          => 'projeto-deferido',
-            'link'          => route('visualizar-projeto', [$id])
-        );
-
         $retornoDeferir = $projeto->deferir($id);
 
         if ($retornoDeferir['success']) {
-            $this->sendEmail($dadosEmail);
             return redirect()
                         ->route('home')
                         ->with('success',$retornoDeferir['message']);
@@ -177,30 +156,10 @@ class ProjetoAdminController extends Controller
     {
         //$projetoCorrigir = $projeto->find($id);
         $correcaoForm = $request->except('_token');
-        
-        $dadosProjeto = $projeto->where('id', $id)->get()->first();
-        $user_id = $dadosProjeto->user_id;
-        
-        $dados_user = User::where('id', $user_id)->get()->first(); 
-        $email_user = $dados_user->email;
-
-        $dadosEmail = (object) Array (
-            'para'          => $email_user,
-            'assunto'       => '[NAAC - Status Projeto '. $request->titulo_projeto .']',
-            'title'         => 'Projeto Indeferido',
-            'title_message' => 'O projeto '. $request->titulo_projeto .'  foi corrigido e encontramos algumas correções a serem feitas.',
-            'descricao'     => $request->objetivo_geral,
-            'titulo'        => $request->titulo_projeto,
-            'status'        => 'Indeferido',
-            'autor'         => $dados_user->name,
-            'tipo'          => 'projeto-indeferido',
-            'link'          => route('corrigir-projeto-user', [$id])
-        );
 
         $responseCorrigir = $projeto->salvarCorrecaoAdmin($correcaoForm, $id);
         
         if ($responseCorrigir['success']) {
-            $this->sendEmail($dadosEmail);
             return redirect()
                         ->route('home')
                         ->with('success',$responseCorrigir['message']);

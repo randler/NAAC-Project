@@ -55,7 +55,8 @@ class RelatorioAutorController extends Controller
      */
     public function verRelatorio($id, Relatorio $relatorio)
     {
-        $dadosRelatorio = $relatorio
+        $dadosRelatorio = auth()->user()
+                                ->relatorios()
                                 ->where('id', $id)
                                 ->with([
                                     'getCoordenador',

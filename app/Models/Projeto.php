@@ -15,7 +15,9 @@ use App\Models\Projeto\Recurso;
 use App\User;
 
 use App\Notifications\ProjetoNotification;
+use App\Mail\SendNotifications;
 
+use Mail;
 use DB;
 
 class Projeto extends Model
@@ -70,6 +72,7 @@ class Projeto extends Model
         $parceria = new Parceria;
         $orcamento = new Oracamento;
         $recurso = new Recurso;
+        $user = new User;
 
         try {
 
@@ -141,17 +144,36 @@ class Projeto extends Model
                         }
                     }
 
+                    /** ************************ NOTIFICAÇÕES ********************
+                     *  
+                    **/
+                    // ******* NOTIFICAR NO SISTEMA *******
                     $insert->status_projeto = 'Enviado';
                     $admins = User::where('admin', true)->get();
                     foreach ($admins as $admin)
                         $admin->notify(new ProjetoNotification($insert));
                     
+                    // ****** NOTIFICAR POR E-MAIL *********
+                    $dadosEmail = (object) Array (
+                        'para'          => $user->where('admin', true)->get()->first()->email,
+                        'assunto'       => '[NAAC - Novo Projeto Cadastrado]',
+                        'title'         => 'Novo Projeto',
+                        'title_message' => 'A um novo projeto cadastrado, na data ' . date('d/m/Y') . '. ',
+                        'descricao'     => $insert->objetivo_geral,
+                        'titulo'        => $insert->titulo_projeto,
+                        'status'        => 'Enviado',
+                        'autor'         => auth()->user()->name,
+                        'tipo'          => 'novo-projeto',
+                        'link'          => route('corrigir-project', [$insert->id])
+                    );
+                    
+                    $this->sendEmail($dadosEmail);
+                    /************************************************************************************************* */
                     DB::commit();
 
                     return [
                         'success' => true,
-                        'message' => 'Projeto salvo com sucesso',
-                        'id'      =>$insert->id
+                        'message' => 'Projeto salvo com sucesso'
                     ];
                 } else {
                     DB::rollback();
@@ -195,11 +217,39 @@ class Projeto extends Model
             $project->status_projeto = 'Indeferido';    
         }
 
-        User::find($project->get()->first()->user_id)->notify(new ProjetoNotification($project));
-
+        // SALVAR A CORREÇÃO
         $updateCorrecao = $project->update($correcaoForm);
 
         if ($updateCorrecao) {
+            /** ***************************** NOTIFICAR *************************************** */
+            // ******************** NA APLICAÇÃO ************************
+            User::find($project
+                            ->get()
+                            ->first()
+                            ->user_id)
+                        ->notify(new ProjetoNotification($project));
+
+            // ******************** POR E-MAIL **************************
+            $user_id = $project->user_id;
+            
+            $dados_user = User::where('id', $user_id)->get()->first(); 
+            $email_user = $dados_user->email;
+    
+            $dadosEmail = (object) Array (
+                'para'          => $email_user,
+                'assunto'       => '[NAAC - Status Projeto '. $project->titulo_projeto .']',
+                'title'         => 'Projeto Indeferido',
+                'title_message' => 'O projeto '. $project->titulo_projeto .'  foi corrigido e encontramos algumas correções a serem feitas.',
+                'descricao'     => $project->objetivo_geral,
+                'titulo'        => $project->titulo_projeto,
+                'status'        => 'Indeferido',
+                'autor'         => $dados_user->name,
+                'tipo'          => 'projeto-indeferido',
+                'link'          => route('corrigir-projeto-user', [$id])
+            );
+
+            $this->sendEmail($dadosEmail);
+            // **************************************************************************************************
             DB::commit();
             return [
                 'success' => true,
@@ -210,6 +260,66 @@ class Projeto extends Model
             return [
                 'success' => false,
                 'message' => 'Erro ao tentar salvar a correção do projeto'
+            ];
+        }
+    }
+
+    /** ******* DEFERIR PROJETO *************
+     * 
+     */
+    public function deferir($id)
+    {
+        DB::beginTransaction();
+        
+        $projetoDeferir = $this->where('id', $id);//->get()->first();
+        //dd($projetoDeferir);
+        
+        $updateDeferido = $projetoDeferir->update([
+            'status_projeto'        => 'Deferido',
+            'parecer_naac'          => 'Deferido',
+            'data_aprovacao_naac'   => date("d/m/Y")
+        ]);
+
+        if ($updateDeferido) {
+            /** ************************ NOTIFICAR *************************************************/
+            // ******* NA APLICAÇÃO *************
+            $projeto = $projetoDeferir->get()->first();
+            $projeto->status_projeto = 'Deferido';
+
+            $user = User::find($projeto->user_id)
+                            ->notify(new ProjetoNotification($projeto));
+
+            // ********* POR E-MAIL **************
+                //Email do usuário
+            $dados_user = User::where('id', $projeto->user_id)->get()->first(); 
+            $email_user = $dados_user->email; 
+                //Compor e-mail
+            $dadosEmail = (object) Array (
+                'para'          => $email_user,
+                'assunto'       => '[NAAC - Status Projeto '. $projeto->titulo_projeto .']',
+                'title'         => 'Projeto Deferido',
+                'title_message' => 'Parabéns o projeto '. $projeto->titulo_projeto .' foi deferido na data: ' . date('d/m/Y') . '. ',
+                'descricao'     => $projeto->objetivo_geral,
+                'titulo'        => $projeto->titulo_projeto,
+                'status'        => 'Deferido',
+                'autor'         => $dados_user->name,
+                'tipo'          => 'projeto-deferido',
+                'link'          => route('visualizar-projeto', [$id])
+            );
+
+            $this->sendEmail($dadosEmail);
+            /**************************************************************************************************************************************** */
+            
+            DB::commit();
+            return [
+                'success' => true,
+                'message' => 'Projeto Deferido com sucesso!'
+            ];
+        } else {
+            DB::rollback();
+            return [
+                'success' => false,
+                'message' => 'Erro ao tentar Deferir o projeto.'
             ];
         }
     }
@@ -230,17 +340,13 @@ class Projeto extends Model
         $parceria = new Parceria;
         $orcamento = new Oracamento;
         $recurso = new Recurso;
+        $user = new User;
 
         $request['status_projeto']  = "Reenviado";
         $request['cunho_social']    = ($request['cunho_social'] == "Sim") ? true : false;
-        
-        $oldProjeto = $this->where('id', $id)->first();
-        $notifyProject = $oldProjeto;
-        $notifyProject->status_projeto = 'Reenviado';
-        $admins = User::where('admin', true)->get();
-        foreach ($admins as $admin)
-            $admin->notify(new ProjetoNotification($notifyProject));
         //dd($request);
+
+        $oldProjeto = $this->where('id', $id)->first();
         $updateCorrecao = $oldProjeto->update($request);
         $request['id'] = $id;
         //dd($request);
@@ -304,6 +410,32 @@ class Projeto extends Model
                 }
             }
 
+
+            /******************************* NOTIFICAÇÕES ******************************************/
+            // ****************** NA APLICAÇÃO ***************************
+            $oldProjeto->status_projeto = 'Reenviado';
+            $admins = User::where('admin', true)->get();
+            foreach ($admins as $admin)
+                $admin->notify(new ProjetoNotification($oldProjeto));
+
+            // *************** POR E-MAIL ***************
+            //dd($oldProjeto->id);
+            $dadosEmail = (object) Array (
+                'para'          => $user->where('admin', true)->get()->first()->email,
+                'assunto'       => '['. auth()->user()->name .' - Projeto Corrigido]',
+                'title'         => 'Projeto Corrigido',
+                'title_message' => 'O projeto '. $oldProjeto->titulo_projeto .' foi corrigido na data: ' . date('d/m/Y') . '. ',
+                'descricao'     => $oldProjeto->objetivo_geral,
+                'titulo'        => $oldProjeto->titulo_projeto,
+                'status'        => 'Corrigido',
+                'autor'         => auth()->user()->name,
+                'tipo'          => 'projeto-corrigido',
+                'link'          => route('corrigir-project', [$oldProjeto->id])
+            );
+
+            $this->sendEmail($dadosEmail);
+            /****************************************************************************************/
+
             DB::commit();
             return [
                 'success' => true,
@@ -319,71 +451,10 @@ class Projeto extends Model
         }
     }
 
-    public function indeferir($id)
+    public function setRelatorio(int $idProjeto, int $idRelatorio)
     {
-        DB::beginTransaction();
-        $projetoIndeferir = $this->where('id', $id);
-        $projeto = $projetoIndeferir->get()->first();
-        $projeto->status_projeto = 'Indeferido';
-        $user = User::where('id', $projeto->user_id);
-        $user->get()->first()->notify(new ProjetoNotification($projeto));
-        
-        $updateIndeferido = $projetoIndeferir->update([
-            'status_projeto'        => 'Indeferido',
-            'parecer_naac'          => 'Indeferido',
-            'data_aprovacao_naac'   => date("d/m/Y")
-        ]);
-
-        if ($updateIndeferido) {
-            DB::commit();
-            return [
-                'success' => true,
-                'message' => 'Projeto indeferido com sucesso!'
-            ];
-        } else {
-            DB::rollback();
-            return [
-                'success' => false,
-                'message' => 'Erro ao tentar indeferir o projeto.'
-            ];
-        }
-    }
-
-    public function deferir($id)
-    {
-        DB::beginTransaction();
-        
-        $projetoDeferir = $this->where('id', $id);
-        //dd($projetoDeferir);
-        
-        $projeto = $projetoDeferir->get()->first();
-        $projeto->status_projeto = 'Deferido';
-        $user = User::find($projeto->user_id)->notify(new ProjetoNotification($projeto));
-        
-        $updateDeferido = $projetoDeferir->update([
-            'status_projeto'        => 'Deferido',
-            'parecer_naac'          => 'Deferido',
-            'data_aprovacao_naac'   => date("d/m/Y")
-        ]);
-
-        if ($updateDeferido) {
-            DB::commit();
-            return [
-                'success' => true,
-                'message' => 'Projeto Deferido com sucesso!'
-            ];
-        } else {
-            DB::rollback();
-            return [
-                'success' => false,
-                'message' => 'Erro ao tentar Deferir o projeto.'
-            ];
-        }
-    }
-
-    public function setRelatorio(int $idRelatorio)
-    {
-        $update = $this->update([
+        //dd($idRelatorio);
+        $update = $this->where('id', $idProjeto)->update([
             'relatorio_id' => $idRelatorio,
             'has_relatorio' => true
         ]);
@@ -432,5 +503,14 @@ class Projeto extends Model
     public function getRecursos()
     {
         return $this->hasMany(Recurso::class);
+    }
+
+
+    /******************* ENVIAR EMAIL *************************
+     * 
+     */
+    private function sendEmail($dadosEmail)
+    {
+        Mail::to($dadosEmail->para)->send(new SendNotifications($dadosEmail));
     }
 }

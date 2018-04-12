@@ -71,7 +71,9 @@ $this->group(['namespace' => 'Projeto', 'middleware' => ['auth', 'check.admin', 
     $this->get('/projetos-deferidos',   'ProjetoAdminController@todosProjetosDeferidos')      ->name('projetos-deferidos');
     $this->get('/projetos-enviados',    'ProjetoAdminController@projetosSolicitados')          ->name('projetos-solicitados');
     $this->get('/editar-projeto/{id}/{notify_id?}', 'ProjetoAdminController@corrigirProjeto')->name('corrigir-project');
+    
     $this->post('/editar-projeto/{id}',             'ProjetoAdminController@salvarCorrigirProjeto')     ->name('salvar-corrigir-project');
+    
     $this->get('/indeferir-projeto/{id}',           'ProjetoAdminController@indeferirProjeto')        ->name('indeferir-projeto');
     $this->get('/deferir-projeto/{id}',             'ProjetoAdminController@deferirProjeto')            ->name('deferir-projeto');
     
@@ -80,18 +82,11 @@ $this->group(['namespace' => 'Projeto', 'middleware' => ['auth', 'check.admin', 
 
 $this->group(['namespace' => 'Relatorio', 'middleware' => ['auth', 'check.admin', 'auth.unique.user']], function() {
     $this->get('/todos-relatorios',                     'RelatorioAdminController@todosRelatoriosAdmin')->name('todos-Relatorios-admin');
-    $this->get('/editar-Relatorio/{id}/{notify_id?}',   'RelatorioAdminController@exibirCorrigirRelatorioAdmin')->name('corrigir-relatorio-admin');
-
-    $this->get('/deferir-Relatorio/{id}', 'RelatorioAdminController@deferirRelatorio')->name('deferir-relatorio');
+    $this->get('/editar-relatorio/{id}/{notify_id?}',   'RelatorioAdminController@exibirCorrigirRelatorioAdmin')->name('corrigir-relatorio-admin');
+    $this->get('/relatorios-enviados',                  'RelatorioAdminController@relatoriosSolicitados')->name('relatorios-solicitados');
+    $this->get('/relatorios-reenviados',  'RelatorioAdminController@relatoriosCorrigir')->name('relatorios-reenviados');
+    $this->get('/deferir-relatorio/{id}', 'RelatorioAdminController@deferirRelatorio')->name('deferir-relatorio');
+    $this->get('/relatorios-deferidos',   'RelatorioAdminController@relatoriosDeferidos')->name('relatorios-deferidos');
 
     $this->put('/salvar-correcao-relatorio/{id}',       'RelatorioAdminController@salvarCorrigirRelatorio')->name('salvar-corrigir-relatorio');
-    /*$this->get('/Relatorios-reenviados',  'RelatorioAdminController@todosRelatoriosCorrigidos')    ->name('Relatorios-reenviados');
-    $this->get('/Relatorios-deferidos',   'RelatorioAdminController@todosRelatoriosDeferidos')      ->name('Relatorios-deferidos');
-    $this->get('/Relatorios-enviados',    'RelatorioAdminController@RelatoriosSolicitados')          ->name('Relatorios-solicitados');
-    
-    $this->post('/editar-Relatorio/{id}',             'RelatorioAdminController@salvarCorrigirRelatorio')     ->name('salvar-corrigir-relatorio');
-    $this->get('/indeferir-Relatorio/{id}',           'RelatorioAdminController@indeferirRelatorio')        ->name('indeferir-Relatorio');
-    $this->get('/deferir-Relatorio/{id}',             'RelatorioAdminController@deferirRelatorio')            ->name('deferir-relatorio');
-    
-    */
 });

@@ -7,7 +7,7 @@
         <div class="row">
             <div class="col-md-12 text-center">
                 <i class="fa-5x far fa-file"></i>
-                <h3 class="display-3">Correção do relatório {{$dadosRelatorio->titulo or ''}}</h3>
+                <h3 class="display-3">Dados do relatório {{$dadosRelatorio->titulo or ''}}</h3>
             </div>
         </div>
     </div>
@@ -22,7 +22,7 @@
             </div>
             <div class="col-md-6 text-right">
               @if ($dadosRelatorio->status_relatorio == 'Deferido')
-                <a href="{{route('download-relatorio', [$dadosRelatorio->id])}}" class="m-1 btn btn-primary btn-sm"> <i class="fas fa-download"></i> baixar Projeto </a>
+                <a href="{{route('download-relatorio', [$dadosRelatorio->id])}}" class="m-1 btn btn-primary btn-sm"> <i class="fas fa-download"></i> baixar Relatório </a>
               @endif
             </div>
           </div>
@@ -63,7 +63,7 @@
               </tr>
               <tr>
                 <td class="text-right font-weight-bold">Carga horária:</td>
-                <td class="text-left">{{$dadosRelatorio->carga_horaria_evento}}</td>
+                <td class="text-left">{{$dadosRelatorio->carga_horaria_evento}} horas</td>
               </tr>
               <tr>
                 <td class="text-right font-weight-bold">Período de realização:</td>
@@ -147,7 +147,7 @@
         @forelse($dadosRelatorio->getCoordenador as $coordenador)
           <tr>
             <td>{{$coordenador->nome}}</td>
-            <td>{{$coordenador->carga_horaria}}</td>
+            <td>{{$coordenador->carga_horaria}} h</td>
           </tr>
         @empty  
           <tr>
@@ -179,7 +179,7 @@
           @forelse($dadosRelatorio->getEquipeRelatorio as $equipeRelatorio)
             <tr>
               <td>{{$equipeRelatorio->nome}}</td>
-              <td>{{$equipeRelatorio->carga_horaria}}</td>
+              <td>{{$equipeRelatorio->carga_horaria}} h</td>
             </tr>
           @empty  
             <tr>
@@ -213,7 +213,7 @@
             <tr>
               <td>{{$palestrante->nome}}</td>
               <td>{{$palestrante->titulo}}</td>
-              <td>{{$palestrante->carga_horaria}}</td>
+              <td>{{$palestrante->carga_horaria}} h</td>
             </tr>
           @empty  
             <tr>
@@ -246,7 +246,7 @@
           @forelse($dadosRelatorio->getMonitor as $monitor)
             <tr>
               <td>{{$monitor->nome}}</td>
-              <td>{{$monitor->carga_horaria}}</td>
+              <td>{{$monitor->carga_horaria}} h</td>
             </tr>
           @empty  
             <tr>
@@ -280,7 +280,7 @@
             <tr>
               <td>{{$expositor->nome}}</td>
               <td>{{$expositor->titulo}}</td>
-              <td>{{$expositor->carga_horaria}}</td>
+              <td>{{$expositor->carga_horaria}} h</td>
             </tr>
           @empty  
             <tr>
@@ -315,7 +315,7 @@
             <tr>
               <td>{{$ministrante->nome}}</td>
               <td>{{$ministrante->titulo}}</td>
-              <td>{{$ministrante->carga_horaria}}</td>
+              <td>{{$ministrante->carga_horaria}} h</td>
             </tr>
           @empty  
             <tr>
@@ -348,7 +348,7 @@
           @forelse($dadosRelatorio->getParticipante as $participante)
             <tr>
               <td>{{$participante->nome}}</td>
-              <td>{{$participante->carga_horaria}}</td>
+              <td>{{$participante->carga_horaria}} h</td>
             </tr>
           @empty  
             <tr>
@@ -380,7 +380,7 @@
             @forelse($dadosRelatorio->getOuvinte as $ouvinte)
               <tr>
                 <td>{{$ouvinte->nome}}</td>
-                <td>{{$ouvinte->carga_horaria}}</td>
+                <td>{{$ouvinte->carga_horaria}} h</td>
               </tr>
             @empty  
               <tr>

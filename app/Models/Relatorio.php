@@ -14,8 +14,12 @@ use App\Models\Relatorio\Monitor;
 use App\Models\Relatorio\Ouvinte;
 use App\Models\Relatorio\Palestrante;
 use App\Models\Relatorio\Participante;
-
 use App\User;
+
+use App\Notifications\RelatorioNotification;
+use App\Mail\SendNotifications;
+
+use Mail;
 use DB;
 
 class Relatorio extends Model
@@ -53,6 +57,7 @@ class Relatorio extends Model
     public function salvarRelatorio(Array $dadosValidados): Array
     {
         //dd($dadosValidados);
+        $projeto = new Projeto;
         $coordenador = new Coordenador;
         $cronograma = new Cronograma;
         $equipeRelatorio = new EquipeRelatorio;
@@ -62,6 +67,7 @@ class Relatorio extends Model
         $ouvinte = new Ouvinte;
         $palestrante = new Palestrante;
         $participante = new Participante;
+        $user = new User;
 
         try {
             DB::beginTransaction();
@@ -72,13 +78,9 @@ class Relatorio extends Model
 
             if ($insertRelatorio) {
                 // *** Atualizar a referencia do id_relatorio no projeto
-                $projeto = auth()->user()
-                                    ->projects()
-                                    ->where('id',(int) $dadosValidados['projeto_id'])
-                                    ->first()
-                                    ->setRelatorio($insertRelatorio->id);
-                
-                if (!$projeto) {
+                $projetoResponse = $projeto->setRelatorio($dadosValidados['projeto_id'], $insertRelatorio->id);
+                //dd($insertRelatorio->id, $projetoResponse, auth()->user()->projects()->where('id',(int) $dadosValidados['projeto_id'])->get());
+                if (!$projetoResponse) {
                     DB::rollback();
                     return [
                         'success' => false,
@@ -151,7 +153,30 @@ class Relatorio extends Model
                         return $insertParticipante;
                     }
                 }
-                /****************************************************************** */
+                /*************************** NOTIFICAÇÕES *************************************** */
+
+                // ******************* NOTIFICAR NA APLICAÇÃO ******************
+                $insertRelatorio->status_projeto = 'Enviado';
+                $admins = User::where('admin', true)->get();
+                foreach ($admins as $admin)
+                        $admin->notify(new RelatorioNotification($insertRelatorio));
+                
+                // ****** NOTIFICAR POR E-MAIL *********
+                $dadosEmail = (object) Array (
+                    'para'          => $user->where('admin', true)->get()->first()->email,
+                    'assunto'       => '[NAAC - Novo Relatório Cadastrado]',
+                    'title'         => 'Novo Relatório',
+                    'title_message' => 'A um novo relatório cadastrado, na data ' . date('d/m/Y') . '. ',
+                    'descricao'     => $insertRelatorio->objetivo_geral,
+                    'titulo'        => $insertRelatorio->titulo,
+                    'status'        => 'Enviado',
+                    'autor'         => auth()->user()->name,
+                    'tipo'          => 'novo-relatorio',
+                    'link'          => route('corrigir-relatorio-admin', [$insertRelatorio->id])
+                );
+                    
+                $this->sendEmail($dadosEmail);
+                    /************************************************************************************************* */
 
                 /*** SE TUDO OCORREU PERFEITAMENTE DAR COMMIT NO BANCO E NÃO VAI GERAR ERRO */
                 DB::commit();
@@ -178,9 +203,6 @@ class Relatorio extends Model
 
     /***************** INDEFERIR RELATORIO ********************************************
      * 
-     * 
-     * 
-     * 
      */
     public function salvarCorrigirRelatorio(int $id, Array $dadosIndeferir): Array
     {
@@ -197,11 +219,38 @@ class Relatorio extends Model
             $relatorio->status_relatorio = 'Indeferido';    
         }
 
-        //User::find($relatorio->get()->first()->user_id)->notify(new ProjetoNotification($relatorio));
-
         $updateCorrecao = $relatorio->update($dadosIndeferir);
         //dd($updateCorrecao);
         if ($updateCorrecao) {
+            /** ************************* NOTIFICAÇÃO *************************** */
+            // ******************** NA APLICAÇÃO *******************************
+            User::find($relatorio
+                            ->get()
+                            ->first()
+                            ->user_id
+                        )
+                        ->notify(new RelatorioNotification($relatorio));
+
+            // ******************* POR E-MAIL *********************************
+            $user_id = $relatorio->user_id;
+            
+            $dados_user = User::where('id', $user_id)->get()->first(); 
+    
+            $dadosEmail = (object) Array (
+                'para'          => $dados_user->email,
+                'assunto'       => '[NAAC - Status Relatório '. $relatorio->titulo .']',
+                'title'         => 'Relatório Indeferido',
+                'title_message' => 'O relatório '. $relatorio->titulo .'  foi corrigido e encontramos algumas correções a serem feitas.',
+                'descricao'     => $relatorio->objetivo_geral,
+                'titulo'        => $relatorio->titulo,
+                'status'        => 'Indeferido',
+                'autor'         => $dados_user->name,
+                'tipo'          => 'relatorio-indeferido',
+                'link'          => route('corrigir-relatorio-user', [$id])
+            );
+            
+            $this->sendEmail($dadosEmail);
+            // **************************************************************************************************
             DB::commit();
             return [
                 'success' => true,
@@ -218,28 +267,47 @@ class Relatorio extends Model
 
     /** ************* DEFERIR RELATORIO **********************************************
      * 
-     * 
-     * 
      */
     public function deferirRelatorio(int $id): Array
     {
         DB::beginTransaction();
         
         $relatorioDeferir = $this->where('id', $id);
-        //dd($relatorioDeferir);
-        
-        $relatorio = $relatorioDeferir->get()->first();
-        $relatorio->status_relatorio = 'Deferido';
-        //dd($relatorio);
-        //$user = User::find($projeto->user_id)->notify(new ProjetoNotification($projeto));
         
         $updateDeferido = $relatorioDeferir->update([
             'status_relatorio'      => 'Deferido',
             'parecer_naac'          => 'Deferido'
         ]);
-        //dd($updateDeferido);
 
         if ($updateDeferido) {
+
+            /*************************** NOTIFICAÇÕES ********************************* */
+            // ******************* NA APLICAÇÃO *************************
+            $relatorio = $relatorioDeferir->get()->first();
+            $relatorio->status_relatorio = 'Deferido';
+
+            $user = User::find($relatorio->user_id)
+                            ->notify(new RelatorioNotification($relatorio));
+
+            // ******************* POR E-MAIL ***************************
+            $dados_user = User::where('id', $relatorio->user_id)->get()->first();  
+                //Compor e-mail
+            $dadosEmail = (object) Array (
+                'para'          => $dados_user->email,
+                'assunto'       => '[NAAC - Status Relatório '. $relatorio->titulo .']',
+                'title'         => 'Relatório Deferido',
+                'title_message' => 'Parabéns o relatório '. $relatorio->titulo .' foi deferido na data: ' . date('d/m/Y') . '. ',
+                'descricao'     => $relatorio->objetivo_geral,
+                'titulo'        => $relatorio->titulo,
+                'status'        => 'Deferido',
+                'autor'         => $dados_user->name,
+                'tipo'          => 'relatorio-deferido',
+                'link'          => route('visualizar-relatorio', [$id])
+            );
+
+            $this->sendEmail($dadosEmail);
+            /**************************************************************************************************************************************** */
+            
             DB::commit();
             return [
                 'success' => true,
@@ -271,21 +339,15 @@ class Relatorio extends Model
         $ouvinte = new Ouvinte;
         $palestrante = new Palestrante;
         $participante = new Participante;
+        $user = new User;
 
         DB::beginTransaction();
-        //dd($request);
+
         $dadosValidados['status_relatorio']  = "Reenviado";
-        
-        $oldProjeto = $this->where('id', $id)->first();
-        //$notifyProject = $oldProjeto;
-        //$notifyProject->status_projeto = 'Reenviado';
-        //$admins = User::where('admin', true)->get();
-        //foreach ($admins as $admin)
-          //  $admin->notify(new ProjetoNotification($notifyProject));
-        //dd($dadosValidados);
-        $updateCorrecao = $oldProjeto->update($dadosValidados);
+        $relatorioBD = $this->where('id', $id)->first();
+        $updateCorrecao = $relatorioBD->update($dadosValidados);        
         $dadosValidados['id'] = $id;
-        //dd($dadosValidados);
+
         if ($updateCorrecao) {
             
                 /************** SALVAR DADOS PREENCHIDOS NAS TABELAS DA VIEW ************/
@@ -353,7 +415,31 @@ class Relatorio extends Model
                     }
                 }
                 /****************************************************************** */
-            //dd('commit');
+        
+            /************************** NOTIFICAÇÕES ***************************************/
+            // ****************** NA APLICAÇÃO ***************************
+            $relatorioBD->status_projeto = 'Reenviado';
+            $admins = User::where('admin', true)->get();
+            foreach ($admins as $admin)
+                $admin->notify(new RelatorioNotification($relatorioBD));
+            
+            // ***************** POR E-MAIL *****************************
+            $dadosEmail = (object) Array (
+                'para'          => $user->where('admin', true)->get()->first()->email,
+                'assunto'       => '['. auth()->user()->name .' - Relatório Corrigido]',
+                'title'         => 'Relatório Corrigido',
+                'title_message' => 'O relatório '. $relatorioBD->titulo .' foi corrigido na data: ' . date('d/m/Y') . '. ',
+                'descricao'     => $relatorioBD->objetivo_geral,
+                'titulo'        => $relatorioBD->titulo,
+                'status'        => 'Corrigido',
+                'autor'         => auth()->user()->name,
+                'tipo'          => 'relatorio-corrigido',
+                'link'          => route('corrigir-relatorio-admin', [$relatorioBD->id])
+            );
+
+            $this->sendEmail($dadosEmail);
+            /****************************************************************************************/
+                
 
             DB::commit();
             return [
@@ -421,5 +507,13 @@ class Relatorio extends Model
     public function getParticipante()
     {
         return $this->hasMany(Participante::class);
+    }
+
+    /******************* ENVIAR EMAIL *************************
+     * 
+     */
+    private function sendEmail($dadosEmail)
+    {
+        Mail::to($dadosEmail->para)->send(new SendNotifications($dadosEmail));
     }
 }

@@ -4,13 +4,12 @@ namespace App\Http\Controllers\Projeto;
 
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
-use App\Mail\SendNotifications;
 
 use App\Models\Projeto;
 use App\Http\Requests\Projeto\ProjetoFormRequest;
 
 use Validator;
-use Mail;
+
 use App\User;
 
 class ProjetoAutorController extends Controller
@@ -30,23 +29,10 @@ class ProjetoAutorController extends Controller
         $dadosValidados = $request->validated();
         //envia para o metodo salvar do model os dados 
         $responseSave = $projeto->salvarProjeto($dadosValidados);
-        //compor e-mail
-        $dadosEmail = (object) Array (
-            'para'          => $user->where('admin', true)->get()->first()->email,
-            'assunto'       => '[NAAC - Novo Projeto Cadastrado]',
-            'title'         => 'Novo Projeto',
-            'title_message' => 'A um novo projeto cadastrado, na data ' . date('d/m/Y') . '. ',
-            'descricao'     => $request->objetivo_geral,
-            'titulo'        => $request->titulo_projeto,
-            'status'        => 'Enviado',
-            'autor'         => auth()->user()->name,
-            'tipo'          => 'novo-projeto',
-            'link'          => route('corrigir-project', [$responseSave['id']])
-        );
+
         //se ocorrer tudo certo retorna a pagina principal com sucesso
         // caso não ele retorna ao formulário com os dados e com o especifico erro
         if($responseSave['success']) {
-            $this->sendEmail($dadosEmail);
            return redirect()
                         ->route('home')
                         ->with('success',$responseSave['message']);
@@ -161,22 +147,8 @@ class ProjetoAutorController extends Controller
          
         //dd($request->all());
         $responseUpdate = $projeto->userCorrigirProjeto($id, $request->all());
-
-        $dadosEmail = (object) Array (
-            'para'          => $user->where('admin', true)->get()->first()->email,
-            'assunto'       => '['. auth()->user()->name .' - Projeto Corrigido]',
-            'title'         => 'Projeto Corrigido',
-            'title_message' => 'O projeto '. $request->titulo_projeto .' foi corrigido na data: ' . date('d/m/Y') . '. ',
-            'descricao'     => $request->objetivo_geral,
-            'titulo'        => $request->titulo_projeto,
-            'status'        => 'Corrigido',
-            'autor'         => auth()->user()->name,
-            'tipo'          => 'projeto-corrigido',
-            'link'          => route('corrigir-project', [$id])
-        );
         //dd($responseUpdate);
         if($responseUpdate['success']) {
-            $this->sendEmail($dadosEmail);
             return redirect()
                         ->route('home')
                         ->with('success',$responseUpdate['message']);
@@ -340,15 +312,5 @@ class ProjetoAutorController extends Controller
         foreach (auth()->user()->unreadNotifications as $notification)
             if ($notification->id == $notify_id)
                 $notification->delete();
-    }
-
-    /******************************************** */
-
-    /**
-     * 
-     */
-    private function sendEmail($dadosEmail)
-    {
-        Mail::to($dadosEmail->para)->send(new SendNotifications($dadosEmail));
     }
 }

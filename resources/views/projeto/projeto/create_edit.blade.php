@@ -175,28 +175,28 @@
                       <div class="form-group row"> 
                         <label class="col-sm-2 col-form-label text-left">Carga horária do evento</label>
                         <div class="col-sm-10">
-                            {!! Form::number('carga_horaria', null, ['class' => 'col-6 form-control', 'placeholder' => 'Digite a carga horária', ' aria-describedby' => 'chHelpBlock', 'id' => 'inputCH']) !!}
+                            {!! Form::number('carga_horaria', null, ['class' => 'col-6 form-control', 'placeholder' => 'Digite a carga horária', ' aria-describedby' => 'chHelpBlock', 'id' => 'inputCH', 'min' => '1']) !!}
                             <div> <small class="text-danger" id="inputCH">* Mínimo de uma (1) hora</small> </div> 
                         </div>
                       </div>
                       <div class="form-group row"> 
                         <label class="col-sm-2 col-form-label text-left">Número de vagas</label>
                         <div class="col-sm-10">
-                          {!! Form::number('numero_vagas', null, ['class' => 'col-6 form-control', 'placeholder' => 'Digite o número de vagas', ' aria-describedby' => 'vagasHelpBlock', 'id' => 'inputVagas']) !!}
+                          {!! Form::number('numero_vagas', null, ['class' => 'col-6 form-control', 'placeholder' => 'Digite o número de vagas', ' aria-describedby' => 'vagasHelpBlock', 'id' => 'inputVagas', 'min' => '1']) !!}
                           <div> <small class="text-danger" id="inputVagas">* Mínimo de uma (1) vaga</small> </div> 
                         </div>
                       </div>
                       <div class="form-group row"> 
                         <label class="col-sm-2 col-form-label text-left">Dias e horarios da realização do evento</label>
                         <div class="col-sm-10">
-                          {!! Form::textarea('dias_horarios_evento', null, ['class' => 'form-control', 'placeholder' => 'Digite os dias e horas de relização do evento', 'rows' => '5', 'id' => 'inputDiasHoras']) !!}
+                          {!! Form::textarea('dias_horarios_evento', null, ['class' => 'form-control', 'placeholder' => 'Digite os dias e horas de relização do evento', 'rows' => '5', 'id' => 'inputDiasHoras', 'style' => 'resize: none']) !!}
                           <div> <span class="text-danger" id="inputDiasHoras">* Separados por vírgula. <b>Ex: Segunda 20:00 - 21:00, Terça 16:00 - 22:00</b></span> </div>
                         </div>
                       </div>
                       <div class="form-group row"> 
                         <label class="col-sm-2 col-form-label text-left">Apresentação/ Justificativa</label>
                         <div class="col-sm-10"> 
-                          {!! Form::textarea('justificativa', null, ['class' => 'form-control', 'placeholder' => 'Digite a Apresentação/Justificativa', 'rows' => '5', 'id' => 'inputJustificatva']) !!}
+                          {!! Form::textarea('justificativa', null, ['class' => 'form-control', 'placeholder' => 'Digite a Apresentação/Justificativa', 'rows' => '5', 'id' => 'inputJustificatva', 'style' => 'resize: none']) !!}
                         </div>
                       </div>
                       <div class="form-group row"> 
@@ -703,7 +703,7 @@
                     <div class="form-group row"> 
                       <label class="col-sm-2 col-form-label text-left">Retorno da proposta</label>
                       <div class="col-sm-10"> 
-                        {!! Form::textarea('retorno_proposta', null, ['class' => 'form-control', 'placeholder' => 'Descrever os beneficios que este trabalho trará para a comunidade acadêmica e/ou conquistense ', 'rows' => '5', 'resize' => 'none', 'id' => 'inputProposta']) !!}
+                        {!! Form::textarea('retorno_proposta', null, ['class' => 'form-control', 'placeholder' => 'Descrever os beneficios que este trabalho trará para a comunidade acadêmica e/ou conquistense ', 'rows' => '5', 'style' => 'resize: none', 'id' => 'inputProposta']) !!}
                       </div>
                     </div>
                   </div>
