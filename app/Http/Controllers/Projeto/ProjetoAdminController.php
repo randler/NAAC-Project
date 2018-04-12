@@ -55,7 +55,7 @@ class ProjetoAdminController extends Controller
         $messageEmpty = 'Não há projeto(s) cadastrado(s)';
         $projetos = $projeto->all();
         //dd($projetos);
-        return view('projeto.projeto.view', compact('projetos'));
+        return view('projeto.projeto.view', compact('projetos', 'messageEmpty', 'messageTitle'));
     }
 
     /**METODO DE VISUALIZAR TODOS OS PROJETOS CADASTRADOS COM CORREÇÕES
