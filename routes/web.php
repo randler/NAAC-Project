@@ -29,6 +29,8 @@ $this->get('/download-projeto/{id}',    'Projeto\DownloadController@downloadProj
 $this->get('/download-relatorio/{id}',  'Relatorio\DownloadController@downloadRelatorioPDF')->middleware('auth', 'auth.unique.user')->name('download-relatorio');
 $this->get('/download-lista/{id}',      'Projeto\DownloadController@downloadListaPDF')->middleware('auth', 'auth.unique.user')->name('download-lista');
 
+$this->any('procurar-projeto', 'Projeto\ProjetoAdminController@procurarProjeto')->middleware('auth', 'auth.unique.user')->name('search-projeto');
+$this->any('procurar-relatorio', 'Relatorio\RelatorioAdminController@procurarRelatorio')->middleware('auth', 'auth.unique.user')->name('search-relatorio');
 
 /**    ****************** ROTAS DO AUTOR **************************     */
 $this->group(['namespace' => 'Projeto','middleware' => ['auth', 'check.autor', 'auth.unique.user']], function() {

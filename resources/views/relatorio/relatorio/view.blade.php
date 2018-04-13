@@ -12,7 +12,42 @@
         </div>
     </div>
 </div>
-<div class="py-5">
+<div class="pt-5 text-center">
+        <div class="container">
+            <div class="row">
+                <div class="col-12 col-md-12">
+                    {!! Form::open(['route' => 'search-relatorio']) !!}
+                        <div class="form-row ">
+                            <div class="mt-1 col-md-5">
+                                {!! Form::hidden('messageTitle', isset($messageTitle) ? $messageTitle : '')!!}
+                                {!! Form::hidden('statusFind', isset($statusFind) ? $statusFind : '')!!}    
+                                {!! Form::text('titulo', null, ['placeholder' => 'Título' ,'class' => 'form-control'])!!}
+                            </div>
+                            <div class="mt-1 col-md-5">
+                                {!! Form::text('coordenador_projeto', null, ['placeholder' => 'Coordenador do projeto' ,'class' => 'form-control'])!!}
+                            </div>
+                            <!--div class="col-md-3">
+                                <input type="text" class="form-control" placeholder="Zip">
+                            </div-->
+                            <div class="mt-1 col-12 col-md-2">
+                                {!! Form::button('<i class="fas fa-search"></i>', ['type' => 'submit', 'placeholder' => 'Autor' ,'class' => 'btn btn-block btn-primary'])!!}
+                            </div>
+                        </div>
+                    {!! Form::close() !!}
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="text-center">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-12">
+                    <hr>
+                </div>
+            </div>
+        </div>
+    </div>
+<div class="pb-5">
     <div class="container">
         <div class="row">
         @forelse($relatorios as $relatorio)
@@ -71,7 +106,7 @@
         @empty
                     <div class="col-md-12">
                     <h1 class="text-center py-4">{{$messageEmpty or 'Não há relatorios cadastrados'}}</h1>
-                    <a href="{{route('home')}}"><p class="lead text-center"><i class=" fa text-center fa-lg fa-reply"></i>  Voltar</p></a>
+                    <a href="{{route('home')}}" style="text-decoration: none;"><p class="lead text-center"><i class=" fa text-center fa-lg fa-reply"></i>  Voltar</p></a>
                     </div>
         @endforelse
         </div>

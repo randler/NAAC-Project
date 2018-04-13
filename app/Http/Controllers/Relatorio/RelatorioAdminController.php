@@ -13,42 +13,52 @@ class RelatorioAdminController extends Controller
 
     public function todosRelatoriosAdmin(Relatorio $relatorio)
     {
+        $messageTitle = 'Todos os Relatórios';
+        $messageEmpty = 'Não há relatório(s) cadastrado(s)';
+        $statusFind = 'all';
+
         $relatorios = $relatorio->all();
 
-        return view('relatorio.relatorio.view', compact('relatorios'));
+        return view('relatorio.relatorio.view', compact('relatorios', 'messageTitle', 'messageEmpty', 'statusFind'));
     }
 
     public function relatoriosSolicitados(Relatorio $relatorio)
     {
         $messageTitle = 'Relatórios solicitados';
         $messageEmpty = 'Não há relatório(s) solicitado(s)';
+        $statusFind = 'Enviado';
+
         $relatorios = $relatorio
                             ->where('status_relatorio', 'Enviado')
                             ->get();
         //dd($relatorios);
-        return view('relatorio.relatorio.view', compact('relatorios', 'messageTitle', 'messageEmpty'));
+        return view('relatorio.relatorio.view', compact('relatorios', 'messageTitle', 'messageEmpty', 'statusFind'));
     }
 
     public function relatoriosCorrigir(Relatorio $relatorio)
     {
         $messageTitle = 'Relatórios a corrigir';
         $messageEmpty = 'Não há relatório(s) a corrigir';
+        $statusFind = 'Reenviado';
+
         $relatorios = $relatorio
                             ->where('status_relatorio', 'Reenviado')
                             ->get();
                             
-        return view('relatorio.relatorio.view', compact('relatorios', 'messageTitle', 'messageEmpty'));
+        return view('relatorio.relatorio.view', compact('relatorios', 'messageTitle', 'messageEmpty', 'statusFind'));
     }
 
     public function relatoriosDeferidos(Relatorio $relatorio)
     {
-        $messageTitle = 'Relatórios Reenviados';
+        $messageTitle = 'Relatórios Deferidos';
         $messageEmpty = 'Não há relatorio(s) deferido(s)';
+        $statusFind = 'Deferido';
+
         $relatorios = $relatorio
                             ->where('status_relatorio', 'Deferido')
                             ->get();
 
-        return view('relatorio.relatorio.view', compact('relatorios', 'messageTitle', 'messageEmpty'));
+        return view('relatorio.relatorio.view', compact('relatorios', 'messageTitle', 'messageEmpty', 'statusFind'));
     }
 
     public function exibirCorrigirRelatorioAdmin(int $id, $notify_id = '', Relatorio $relatorio)
@@ -69,6 +79,19 @@ class RelatorioAdminController extends Controller
                                     ->first();
         //dd($dadosRelatorio);
         return view('relatorio.relatorio.visualizar-relatorio', compact('dadosRelatorio'));
+    }
+
+    public function procurarRelatorio(Request $request, Relatorio $relatorio)
+    {
+        $messageTitle = isset($request->messageTitle) ? $request->messageTitle : '';
+        $messageEmpty = 'Nenhum relatório encontrado!';
+        $statusFind = $request->statusFind;
+        //dd($request->all());
+        $relatorios = $relatorio->procurarRelatorio($request->all());
+        //dd($relatorios);
+
+        return view('relatorio.relatorio.view', compact('relatorios', 'messageTitle', 'messageEmpty', 'statusFind'));
+
     }
 
     public function salvarCorrigirRelatorio(int $id, Request $request, Relatorio $relatorio)

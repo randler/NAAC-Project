@@ -456,6 +456,30 @@ class Relatorio extends Model
         }
     }
 
+    public function procurarRelatorio($dadosPesquisa)
+    {
+        //dd('dados pesquisa', $dadosPesquisa);
+        $pesquisa = $this->where(function ($query) use ($dadosPesquisa) {
+            if (isset($dadosPesquisa['coordenador_projeto'])) {
+                $query->where('coordenador_projeto', 'LIKE', '%' . $dadosPesquisa['coordenador_projeto'] . '%');
+            }
+            if (isset($dadosPesquisa['titulo'])) {
+                $query->where('titulo', 'LIKE', '%' . $dadosPesquisa['titulo'] . '%' );
+            }
+            if ($dadosPesquisa['statusFind'] == 'Indeferido') {
+                $query->where('status_relatorio', 'Indeferido')
+                      ->orWhere('status_relatorio', 'Corrigir')
+                      ->orWhere('status_relatorio', 'Recorrigir');
+            } else if ( $dadosPesquisa['statusFind'] != 'all' ){
+                $query->where('status_relatorio', $dadosPesquisa['statusFind']);
+            }
+        })//->toSql();
+        //dd($pesquisa);
+        ->get();
+
+        return $pesquisa;
+    }
+
 
 
     /*** RELATIONSHIPS */

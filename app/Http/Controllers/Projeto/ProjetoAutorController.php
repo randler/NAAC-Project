@@ -49,9 +49,12 @@ class ProjetoAutorController extends Controller
     */
     public function todosProjetosUser()
     {
+        $messageTitle = 'Todos os seus projetos';
+
+        $statusFind = 'all';
         $projetos = auth()->user()->projects;  
 
-        return view('projeto.projeto.view', compact('projetos'));
+        return view('projeto.projeto.view', compact('projetos', 'messageTitle', 'statusFind'));
     }
 
     /* METODO DE VISUALIZAR TODOS OS PROJETOS
@@ -61,23 +64,25 @@ class ProjetoAutorController extends Controller
     {
         $messageTitle = 'Todos os projetos a corrigir';
         $messageEmpty = 'Não há projetos a corrigir';
+        $statusFind = 'Corrigir';
         $projetos = auth()->user()->projects()
                                   ->where('status_projeto', 'Corrigir')
                                   ->orWhere('status_projeto', 'Recorrigir')
                                   ->get();
         //dd($projetos);                                  
-        return view('projeto.projeto.view', compact('projetos', 'messageTitle', 'messageEmpty'));
+        return view('projeto.projeto.view', compact('projetos', 'messageTitle', 'messageEmpty', 'statusFind'));
     }
 
     public function projetosDeferidos()
     {
         $messageTitle = 'Todos os projetos deferidos';
         $messageEmpty = 'Não há projeto deferido';
+        $statusFind = 'Deferido';
         $projetos = auth()->user()->projects()
                                   ->where('status_projeto', 'Deferido')
                                   ->get();
         //dd($projetos);                                  
-        return view('projeto.projeto.view', compact('projetos', 'messageTitle', 'messageEmpty'));
+        return view('projeto.projeto.view', compact('projetos', 'messageTitle', 'messageEmpty', 'statusFind'));
     }
 
     //******** CORREÇÃO  ************************/

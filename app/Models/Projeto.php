@@ -451,6 +451,29 @@ class Projeto extends Model
         }
     }
 
+    public function procurarProjetos($dadosPesquisa)
+    {
+        //dd('dados pesquisa', $dadosPesquisa);
+        $pesquisa = $this->where(function ($query) use ($dadosPesquisa) {
+            if (isset($dadosPesquisa['autores'])) {
+                $query->where('autores', 'LIKE', '%' . $dadosPesquisa['autores'] . '%');
+            }
+            if (isset($dadosPesquisa['titulo'])) {
+                $query->where('titulo_projeto', 'LIKE', '%' . $dadosPesquisa['titulo'] );
+            }
+            if ($dadosPesquisa['statusFind'] == 'Corrigir') {
+                $query->where('status_projeto', 'Corrigir')
+                      ->orWhere('status_projeto', 'Recorrigir');
+            } else if ( $dadosPesquisa['statusFind'] != 'all' ){
+                $query->where('status_projeto', $dadosPesquisa['statusFind']);
+            }
+        })//->toSql();
+        //dd($pesquisa);
+        ->get();
+
+        return $pesquisa;
+    }
+
     public function setRelatorio(int $idProjeto, int $idRelatorio)
     {
         //dd($idRelatorio);

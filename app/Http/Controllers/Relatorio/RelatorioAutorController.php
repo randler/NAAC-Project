@@ -124,10 +124,11 @@ class RelatorioAutorController extends Controller
      */
     public function todosRelatoriosUser()
     {
+        $statusFind = 'all';
         $relatorios = auth()->user()
                                 ->relatorios()
                                 ->get();
-        return view('relatorio.relatorio.view', compact('relatorios'));
+        return view('relatorio.relatorio.view', compact('relatorios', 'statusFind'));
     }
 
     /**
@@ -138,6 +139,8 @@ class RelatorioAutorController extends Controller
     {
         $messageTitle = 'Todos os Relatórios a Corrigir';
         $messageEmpty = 'Não há relatórios a corrigir';
+        $statusFind = 'Indeferido';
+
         $relatorios = auth()->user()
                                 ->relatorios()
                                 ->where('status_relatorio', 'Indeferido')
@@ -145,7 +148,7 @@ class RelatorioAutorController extends Controller
                                 ->orWhere('status_relatorio', 'Recorrigir')
                                 ->get();
         //dd($relatorios);
-        return view('relatorio.relatorio.view', compact('relatorios', 'messageEmpty', 'messageTitle'));
+        return view('relatorio.relatorio.view', compact('relatorios', 'messageEmpty', 'messageTitle', 'statusFind'));
     }
 
     /**
@@ -155,13 +158,15 @@ class RelatorioAutorController extends Controller
     public function relatoriosDeferidos()
     {
         $messageTitle = 'Todos os Relatórios Deferidos';
-        $messageEmpty = 'Não há relatórios deferidos';
+        $messageEmpty = 'Não há relatório(s) deferido(s)';
+        $statusFind = 'Deferido';
+
         $relatorios = auth()->user()
                                 ->relatorios()
                                 ->where('status_relatorio', 'Deferido')
                                 ->get();
         //dd($relatorios);
-        return view('relatorio.relatorio.view', compact('relatorios', 'messageEmpty', 'messageTitle'));
+        return view('relatorio.relatorio.view', compact('relatorios', 'messageEmpty', 'messageTitle', 'statusFind'));
     }
 
     public function viewCorrigirRelatorio(int $id, $notify_id = '')

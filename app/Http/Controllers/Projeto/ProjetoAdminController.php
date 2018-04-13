@@ -39,10 +39,11 @@ class ProjetoAdminController extends Controller
     {
         $messageTitle = 'Projetos solicitados';
         $messageEmpty = 'Não há projeto(s) solicitado(s)';
+        $statusFind = 'Enviado';
         $projetos = $projetos->where('status_projeto', 'Enviado')
                              ->get();
         //dd($projetos);                          
-        return view('projeto.projeto.view', compact('projetos', 'messageTitle', 'messageEmpty'));
+        return view('projeto.projeto.view', compact('projetos', 'messageTitle', 'messageEmpty', 'statusFind'));
     }
 
     /**METODO DE VISUALIZAR TODOS OS PROJETOS CADASTRADOS
@@ -65,12 +66,14 @@ class ProjetoAdminController extends Controller
      */
     public function todosProjetosCorrigidos(Projeto $projeto)
     {
-        $projetos = $projeto->where('status_projeto', 'Reenviado')
-                             ->get();
         $messageTitle = 'Projetos a corrigir';                             
-        $messageEmpty = 'Não há projeto(s) a corrigir';                     
+        $messageEmpty = 'Não há projeto(s) a corrigir';     
+        $statusFind = 'Reenviado'; 
+
+        $projetos = $projeto->where('status_projeto', 'Reenviado')
+                             ->get();               
         //dd($projetos);
-        return view('projeto.projeto.view', compact('projetos', 'messageEmpty', 'messageTitle'));
+        return view('projeto.projeto.view', compact('projetos', 'messageEmpty', 'messageTitle', 'statusFind'));
     }
 
         /**METODO DE VISUALIZAR TODOS OS PROJETOS DEFERIDOS
@@ -80,12 +83,13 @@ class ProjetoAdminController extends Controller
      */
     public function todosProjetosDeferidos(Projeto $projeto)
     {
-        $projetos = $projeto->where('status_projeto', 'Deferido')
-                             ->get();
         $messageTitle = 'Todos projetos deferidos';                             
-        $messageEmpty = 'Não há projeto(s) deferido(s)';                     
+        $messageEmpty = 'Não há projeto(s) deferido(s)'; 
+        $statusFind = 'Deferido';  
+        $projetos = $projeto->where('status_projeto', 'Deferido')
+                             ->get();                   
         //dd($projetos);
-        return view('projeto.projeto.view', compact('projetos', 'messageEmpty', 'messageTitle'));
+        return view('projeto.projeto.view', compact('projetos', 'messageEmpty', 'messageTitle', 'statusFind'));
     }
 
     /* METODO DE CORREÇÃO PARA O ADMINISTRADOR
@@ -170,6 +174,18 @@ class ProjetoAdminController extends Controller
                         ->back()
                         ->with('error', $responseCorrigir['message']);
         }
+    }
+
+    public function procurarProjeto(Request $request, Projeto $projeto)
+    {
+        $messageTitle = isset($request->messageTitle) ? $request->messageTitle : '';
+        $messageEmpty = 'Nenhum projeto encontrado!';
+        $statusFind = $request->statusFind;
+        //dd($request->all());
+        $projetos = $projeto->procurarProjetos($request->all());
+        //dd($projetos);
+
+        return view('projeto.projeto.view', compact('projetos', 'messageTitle', 'messageEmpty', 'statusFind'));
     }
     
     private function setLida($notify_id)
