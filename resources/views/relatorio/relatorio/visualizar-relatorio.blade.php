@@ -408,7 +408,7 @@
         <h3>Participantes</h3>
       </div>
       <div class="col-sm-3 text-right">
-      @if ($dadosRelatorio->status_relatorio == 'Deferido' && count($dadosRelatorio->getParticipantes) > 0 )
+      @if ($dadosRelatorio->status_relatorio == 'Deferido' && count($dadosRelatorio->getParticipante) > 0 )
         @can('autor')
         @else
             <a class="btn btn-success"href="{{route('download-excel', [$dadosRelatorio->id, 'Participantes'])}}" title="Baixar para planilha"> 
