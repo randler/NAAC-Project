@@ -19,7 +19,11 @@ class InvoicesExport implements FromQuery
 
     public function query()
     {
-        //dd($this->participante->get());                    
-        return $this->participante->get();
+        /*dd($this->participante
+                            ->select('nome', 'carga_horaria')
+                            ->get());*/
+        return $this->participante
+                            ->select('nome', 'carga_horaria')
+                            ->get();
     }
 }
