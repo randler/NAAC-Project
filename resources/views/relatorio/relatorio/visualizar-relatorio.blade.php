@@ -21,7 +21,7 @@
               <h3 class="m-6">Dados gerais do relatório</h3>
             </div>
             <div class="col-md-6 text-right">
-              @if ($dadosRelatorio->status_relatorio == 'Deferido' && sizeof($dadosRelatorio->getParticipantes) > 0 )
+              @if ($dadosRelatorio->status_relatorio == 'Deferido' && $dadosRelatorio->getParticipantes && count($dadosRelatorio->getParticipantes) > 0 )
                 <a href="{{route('download-relatorio', [$dadosRelatorio->id])}}" class="m-1 btn btn-primary btn-sm"> <i class="fas fa-download"></i> baixar Relatório </a>
               @endif
             </div>
@@ -135,7 +135,7 @@
         <h3>Coordenador(es) do Projeto</h3>
       </div>
       <div class="col-sm-3 text-right">
-      @if ($dadosRelatorio->status_relatorio == 'Deferido' && sizeof($dadosRelatorio->getCoordenador) > 0 )
+      @if ($dadosRelatorio->status_relatorio == 'Deferido' && $dadosRelatorio->getCoordenador && count($dadosRelatorio->getCoordenador) > 0 )
         @can('autor')
         @else
             <a class="btn btn-success"href="{{route('download-excel', [$dadosRelatorio->id, 'Coordenadores'])}}" title="Baixar para planilha"> 
@@ -179,7 +179,7 @@
         <h3>Equipe Organizadora</h3>
       </div>
       <div class="col-sm-3 text-right">
-      @if ($dadosRelatorio->status_relatorio == 'Deferido' && sizeof($dadosRelatorio->getEquipeRelatorio) > 0 )
+      @if ($dadosRelatorio->status_relatorio == 'Deferido' && $dadosRelatorio->getEquipeRelatorio && count($dadosRelatorio->getEquipeRelatorio) > 0 )
         @can('autor')
         @else
             <a class="btn btn-success"href="{{route('download-excel', [$dadosRelatorio->id, 'Equipe'])}}" title="Baixar para planilha"> 
@@ -223,7 +223,7 @@
         <h3>Palestrantes</h3>
       </div>
       <div class="col-sm-3 text-right">
-      @if ($dadosRelatorio->status_relatorio == 'Deferido' && sizeof($dadosRelatorio->getPalestrante) > 0 )
+      @if ($dadosRelatorio->status_relatorio == 'Deferido' && $dadosRelatorio->getPalestrante && count($dadosRelatorio->getPalestrante) > 0 )
         @can('autor')
         @else
             <a class="btn btn-success"href="{{route('download-excel', [$dadosRelatorio->id, 'Palestrantes'])}}" title="Baixar para planilha"> 
@@ -270,7 +270,7 @@
         <h3>Monitores</h3>
       </div>
       <div class="col-sm-3 text-right">
-      @if ($dadosRelatorio->status_relatorio == 'Deferido' && sizeof($dadosRelatorio->getMonitor) > 0 )
+      @if ($dadosRelatorio->status_relatorio == 'Deferido' && $dadosRelatorio->getMonitor && count($dadosRelatorio->getMonitor) > 0 )
         @can('autor')
         @else
             <a class="btn btn-success"href="{{route('download-excel', [$dadosRelatorio->id, 'Monitores'])}}" title="Baixar para planilha"> 
@@ -314,7 +314,7 @@
         <h3>Expositores</h3>
       </div>
       <div class="col-sm-3 text-right">
-      @if ($dadosRelatorio->status_relatorio == 'Deferido' && sizeof($dadosRelatorio->getExpositor) > 0 )
+      @if ($dadosRelatorio->status_relatorio == 'Deferido' && $dadosRelatorio->getExpositor && count($dadosRelatorio->getExpositor) > 0 )
         @can('autor')
         @else
             <a class="btn btn-success"href="{{route('download-excel', [$dadosRelatorio->id, 'Expositores'])}}" title="Baixar para planilha"> 
@@ -361,7 +361,7 @@
         <h3>Ministrantes</h3>
       </div>
       <div class="col-sm-3 text-right">
-      @if ($dadosRelatorio->status_relatorio == 'Deferido' && sizeof($dadosRelatorio->getMinistrante) > 0 )
+      @if ($dadosRelatorio->status_relatorio == 'Deferido' && $dadosRelatorio->getMinistrante && count($dadosRelatorio->getMinistrante) > 0 )
         @can('autor')
         @else
             <a class="btn btn-success"href="{{route('download-excel', [$dadosRelatorio->id, 'Ministrantes'])}}" title="Baixar para planilha"> 
@@ -408,7 +408,7 @@
         <h3>Participantes</h3>
       </div>
       <div class="col-sm-3 text-right">
-      @if ($dadosRelatorio->status_relatorio == 'Deferido' && sizeof($dadosRelatorio->getParticipante) > 0 )
+      @if ($dadosRelatorio->status_relatorio == 'Deferido' && $dadosRelatorio->getParticipante && count($dadosRelatorio->getParticipante) > 0 )
         @can('autor')
         @else
             <a class="btn btn-success"href="{{route('download-excel', [$dadosRelatorio->id, 'Participantes'])}}" title="Baixar para planilha"> 
@@ -452,7 +452,7 @@
           <h3>Ouvintes</h3>
         </div>
         <div class="col-sm-3 text-right">
-        @if ($dadosRelatorio->status_relatorio == 'Deferido' && sizeof($dadosRelatorio->getOuvinte) > 0 )
+        @if ($dadosRelatorio->status_relatorio == 'Deferido' && $dadosRelatorio->getOuvinte && count($dadosRelatorio->getOuvinte) > 0 )
           @can('autor')
           @else
               <a class="btn btn-success"href="{{route('download-excel', [$dadosRelatorio->id, 'Ouvintes'])}}" title="Baixar para planilha"> 
