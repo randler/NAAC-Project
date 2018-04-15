@@ -132,15 +132,47 @@ class RelatorioAdminController extends Controller
     }
 
 
-    public function exportarParticipantesEXCEL(int $id, Relatorio $relatorio)
+    public function exportarEXCEL(int $id, string $name, Relatorio $relatorio)
     {
         //dd($relatorio->all());
         $relatorios = $relatorio->where('id', $id)
                                 ->first();
+                                        
         //dd($relatorios);
-        $participante = $relatorios->getParticipante();
+        switch($name) {
+            case 'Coordenadores':
+                 $export = $relatorios->getCoordenador()->select('nome', 'carga_horaria');
+            break;
+            case 'Equipe':
+                $export = $relatorios->getEquipeRelatorio()->select('nome', 'carga_horaria');
+            break;
+            case 'Palestrantes':
+                $export = $relatorios->getPalestrante()->select('nome', 'titulo', 'carga_horaria');
+            break;
+            case 'Monitores':
+                $export = $relatorios->getMonitor()->select('nome', 'carga_horaria');
+            break;
+            case 'Expositores':
+                $export = $relatorios->getExpositor()->select('nome', 'titulo', 'carga_horaria');
+            break;
+            case 'Ministrantes':
+                $export = $relatorios->getMinistrante()->select('nome', 'titulo', 'carga_horaria');
+            break;
+            case 'Participantes':
+                $export = $relatorios->getParticipante()->select('nome', 'carga_horaria');
+            break;
+            case 'Ouvintes':
+                $export = $relatorios->getOuvinte()->select('nome', 'carga_horaria');
+            break;
+        }
+        
         //dd($participante);
-        return Excel::download(new InvoicesExport($participante), 'Participantes - Relatório ' . $relatorios->titulo . '.xlsx');
+        return Excel::download(new InvoicesExport($export), $name . ' - Relatório ' . $relatorios->titulo . '.xlsx');
         //dd($id, $participantes);
+    }
+
+    public function exportarCoordenadoresEXCEL()
+    {
+
     }
 }
