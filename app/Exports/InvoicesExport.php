@@ -25,7 +25,8 @@ class InvoicesExport implements FromQuery
                         ->first()
                         ->getParticipante()
                         ->select('nome', 'carga_horaria')
-                        ->get();
+                        ->get()
+                        ->toArray();
         //return Invoice::all();
     }
 }
