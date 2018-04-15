@@ -5,6 +5,8 @@ namespace App\Models\Projeto;
 use Illuminate\Database\Eloquent\Model;
 use App\Http\Controllers\Projeto\ProjetoAutorController;
 
+use DB;
+
 class Oracamento extends Model
 {
     protected $fillable = [
@@ -17,6 +19,7 @@ class Oracamento extends Model
 
     public function salvar(int $id, Array $dados): Array
     {
+        DB::beginTransaction();
         $cont = 0;
         $erro;
         $projetoController = new ProjetoAutorController;
@@ -24,8 +27,8 @@ class Oracamento extends Model
         $dataTable = $projetoController->stringToArray($dados['table-orcamento']);
         /*dd( $dataTable,
             (int) $dataTable[1],
-            (float) $dataTable[14],
-            (int) $dataTable[13] * (float) $dataTable[14]);*/
+            (float) $dataTable[2],
+            (int) $dataTable[1] * (float) $dataTable[2]);*/
         for ($i=0; $i < count($dataTable); $i+=3) {
             $quantidade     = (int) $dataTable[($i + 1)];
             $valorUnitario  = (float) $dataTable[($i + 2)];
@@ -45,12 +48,18 @@ class Oracamento extends Model
             }
         }
 
-        if ($cont === (count($dataTable)/3))
+        if ($cont === (count($dataTable)/3)) {
+         
+            DB::commit();
+         
             return [
                 'success' => true,
                 'message' => 'Orçamento adicionado com sucesso'
             ];
-
+        }
+        
+        DB::rollback();
+        
         return [
                 'success' => false,
                 'message' => 'Erro ao tentar inserir dados do Orçamento:'
