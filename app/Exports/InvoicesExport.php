@@ -23,7 +23,6 @@ class InvoicesExport implements FromQuery
                             ->select('nome', 'carga_horaria')
                             ->get());*/
         return $this->participante
-                            ->select('nome', 'carga_horaria')
-                            ->get();
+                            ->select('nome', 'carga_horaria');
     }
 }
