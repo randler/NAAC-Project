@@ -4,8 +4,11 @@ namespace App\Http\Controllers\Relatorio;
 
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
-
+//use App\Maatwebsite\ExcelLight\Excel;
 use App\Models\Relatorio;
+use App\Exports\InvoicesExport;
+
+use Excel;
 
 class RelatorioAdminController extends Controller
 {
@@ -126,5 +129,20 @@ class RelatorioAdminController extends Controller
                         ->back()
                         ->with('error', $responseDeferir['message']);
         }
+    }
+
+
+    public function exportarParticipantesEXCEL(int $id, Relatorio $relatorio)
+    {
+        $participantes = $relatorio
+                                ->where('id', $id)
+                                ->first()
+                                ->getParticipante()
+                                ->select('nome', 'carga_horaria')
+                                ->get()
+                                ->toArray();
+        //dd($participantes);
+        return Excel::download(new InvoicesExport($id), 'invoices.xlsx');
+        //dd($id, $participantes);
     }
 }

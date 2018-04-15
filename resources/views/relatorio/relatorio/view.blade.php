@@ -71,6 +71,12 @@
                                 <a href="{{route('download-relatorio', [$relatorio->id])}}" title="Baixar Relatório" style="text-decoration: none"> 
                                     <span class="badge badge-warning"><i class="fas fa-download"></i></span>
                                 </a>
+                                @can('autor')
+                                @else
+                                    <a href="{{route('download-participantes-excel', [$relatorio->id])}}" title="Baixar Lista de Participantes" style="text-decoration: none"> 
+                                        <span class="badge badge-success"><i class="mx-1 far fa-file-excel"></i></span>
+                                    </a>
+                                @endcan
                                 </h6>
                             @elseif ($relatorio->status_relatorio == 'Indeferido' || $relatorio->status_relatorio == 'Recorrigir')
                                 <h6 class="text-muted">Status: <span class="badge badge-danger">{{$relatorio->status_relatorio}}</span></h6>

@@ -91,4 +91,6 @@ $this->group(['namespace' => 'Relatorio', 'middleware' => ['auth', 'check.admin'
     $this->get('/relatorios-deferidos',   'RelatorioAdminController@relatoriosDeferidos')->name('relatorios-deferidos');
 
     $this->put('/salvar-correcao-relatorio/{id}',       'RelatorioAdminController@salvarCorrigirRelatorio')->name('salvar-corrigir-relatorio');
+
+    $this->get('/exportar-participante-excel/{id}',       'RelatorioAdminController@exportarParticipantesEXCEL')->name('download-participantes-excel');
 });
