@@ -134,15 +134,13 @@ class RelatorioAdminController extends Controller
 
     public function exportarParticipantesEXCEL(int $id, Relatorio $relatorio)
     {
-        $participantes = $relatorio
-                                ->where('id', $id)
-                                ->first()
-                                ->getParticipante()
-                                ->select('nome', 'carga_horaria')
-                                ->get()
-                                ->toArray();
-        //dd($participantes);
-        return Excel::download(new InvoicesExport($id), 'invoices.xlsx');
+        //dd($relatorio->all());
+        $relatorios = $relatorio->where('id', $id)
+                                ->first();
+        //dd($relatorios);
+        $participante = $relatorios->getParticipante();
+        //dd($participante);
+        return Excel::download(new InvoicesExport($participante), 'Participantes - Relatório ' . $relatorios->titulo . '.xlsx');
         //dd($id, $participantes);
     }
 }

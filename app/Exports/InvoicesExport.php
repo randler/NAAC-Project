@@ -10,23 +10,16 @@ class InvoicesExport implements FromQuery
 {
     use Exportable;
 
-    protected $id;
+    protected $participante;
 
-    public function __construct($id)
+    public function __construct($participante)
     {
-        $this->id = $id;
+        $this->participante = $participante;
     }
 
     public function query()
     {
-        $relatorio = new Relatorio;
-         return $relatorio
-                        ->where('id', $this->id)
-                        ->first()
-                        ->getParticipante()
-                        ->select('nome', 'carga_horaria')
-                        ->get()
-                        ->toArray();
-        //return Invoice::all();
+        //dd($this->participante->get());                    
+        return $this->participante->get();
     }
 }
