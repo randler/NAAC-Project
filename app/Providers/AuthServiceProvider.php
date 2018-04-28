@@ -29,8 +29,6 @@ class AuthServiceProvider extends ServiceProvider
     {
         $this->registerPolicies();
 
-        //
-
         Gate::define('update-project', function(User $user, Projeto $projeto) {
             return $user->id == $projeto->user_id;
         });

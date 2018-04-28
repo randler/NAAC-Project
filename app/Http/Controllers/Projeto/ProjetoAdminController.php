@@ -18,7 +18,7 @@ class ProjetoAdminController extends Controller
 {
     /**METODO PARA ATUALIZAR COM POLITICAS DE AUTORIZAÇÃO
      * 
-     */
+     
     public function update(Request $request) {
         $projeto = $request->all();
 
@@ -31,7 +31,7 @@ class ProjetoAdminController extends Controller
         return 'atualizou';
 
     }
-
+    */
     /* METODO DE VISUALIZAR TODOS OS PROJETOS SOLICITADOS
         irá retornar todos os projetos daquele usuario
     */
@@ -93,7 +93,7 @@ class ProjetoAdminController extends Controller
     }
 
     /* METODO DE CORREÇÃO PARA O ADMINISTRADOR
-        todas as manipulações para o administrador ver os ados do projeto
+        todas as manipulações para o administrador ver os dados do projeto
         que ele irá corrigir
     */
     public function corrigirProjeto(int $id, $notify_id = '', Projeto $projeto)
