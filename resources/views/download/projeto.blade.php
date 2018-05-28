@@ -37,7 +37,7 @@
           <li class="list-group-item"><b>Autores do Projeto :</b> {{$dadosProject->autores}}</li>
         </ul>
         <ul class="list-group">
-          <li class="list-group-item"><b>Telefones :</b> ADICIONAR TELEFONES </li>
+          <li class="list-group-item"><b>Telefones :</b> {{$dadosProject->telefones}} </li>
         </ul>
         <ul class="list-group">
           <li class="list-group-item"><b>E-mails :</b> {{$dadosProject->emails_responsaveis}}</li>

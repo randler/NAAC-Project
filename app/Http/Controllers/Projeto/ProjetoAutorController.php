@@ -143,7 +143,7 @@ class ProjetoAutorController extends Controller
      * será reenviado para o administrador como "reenviado" 
      *  
      */
-    public function atualizarCorrecaoProjeto(int $id, ProjetoFormRequest $request, Projeto $projeto, User $user)
+    public function atualizarCorrecaoProjeto(int $id, ProjetoFormRequest $request, Projeto $projeto)
     {
         if (!auth()->user()->projects()->find($id))
             return redirect()

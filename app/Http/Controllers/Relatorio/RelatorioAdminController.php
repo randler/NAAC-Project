@@ -171,8 +171,4 @@ class RelatorioAdminController extends Controller
         //dd($id, $participantes);
     }
 
-    public function exportarCoordenadoresEXCEL()
-    {
-
-    }
 }
