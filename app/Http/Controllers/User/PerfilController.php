@@ -21,7 +21,6 @@ class PerfilController extends Controller
     public function update(Request $request, User $user)
     {
         $newUser = $request->all();
-
         if (!$newUser['password']) {
             $newUser['password'] = auth()->user()->password;
             $newUser['password_confirmation'] = auth()->user()->password;
