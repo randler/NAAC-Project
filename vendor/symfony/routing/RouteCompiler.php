@@ -180,6 +180,7 @@ class RouteCompiler implements RouteCompilerInterface
                 if (!$useUtf8 && $needsUtf8) {
                     throw new \LogicException(sprintf('Cannot mix UTF-8 requirement with non-UTF-8 charset for variable "%s" in pattern "%s".', $varName, $pattern));
                 }
+                $regexp = self::transformCapturingGroupsToNonCapturings($regexp);
             }
 
             $tokens[] = array('variable', $isSeparator ? $precedingChar : '', $regexp, $varName);
@@ -208,7 +209,7 @@ class RouteCompiler implements RouteCompilerInterface
         for ($i = 0, $nbToken = count($tokens); $i < $nbToken; ++$i) {
             $regexp .= self::computeRegexp($tokens, $i, $firstOptional);
         }
-        $regexp = self::REGEX_DELIMITER.'^'.$regexp.'$'.self::REGEX_DELIMITER.'s'.($isHost ? 'i' : '');
+        $regexp = self::REGEX_DELIMITER.'^'.$regexp.'$'.self::REGEX_DELIMITER.'sD'.($isHost ? 'i' : '');
 
         // enable Utf8 matching if really required
         if ($needsUtf8) {
@@ -247,7 +248,7 @@ class RouteCompiler implements RouteCompilerInterface
     }
 
     /**
-     * Returns the next static character in the Route pattern that will serve as a separator (or the empty string when none available)
+     * Returns the next static character in the Route pattern that will serve as a separator (or the empty string when none available).
      */
     private static function findNextSeparator(string $pattern, bool $useUtf8): string
     {
@@ -303,5 +304,26 @@ class RouteCompiler implements RouteCompilerInterface
                 return $regexp;
             }
         }
+    }
+
+    private static function transformCapturingGroupsToNonCapturings(string $regexp): string
+    {
+        for ($i = 0; $i < \strlen($regexp); ++$i) {
+            if ('\\' === $regexp[$i]) {
+                ++$i;
+                continue;
+            }
+            if ('(' !== $regexp[$i] || !isset($regexp[$i + 2])) {
+                continue;
+            }
+            if ('*' === $regexp[++$i] || '?' === $regexp[$i]) {
+                ++$i;
+                continue;
+            }
+            $regexp = substr_replace($regexp, '?:', $i, 0);
+            $i += 2;
+        }
+
+        return $regexp;
     }
 }

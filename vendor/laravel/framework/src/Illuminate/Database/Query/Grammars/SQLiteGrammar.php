@@ -63,9 +63,9 @@ class SQLiteGrammar extends Grammar
      */
     protected function compileUnion(array $union)
     {
-        $conjuction = $union['all'] ? ' union all ' : ' union ';
+        $conjunction = $union['all'] ? ' union all ' : ' union ';
 
-        return $conjuction.'select * from ('.$union['query']->toSql().')';
+        return $conjunction.'select * from ('.$union['query']->toSql().')';
     }
 
     /**
@@ -117,6 +117,18 @@ class SQLiteGrammar extends Grammar
     }
 
     /**
+     * Compile a "where time" clause.
+     *
+     * @param  \Illuminate\Database\Query\Builder  $query
+     * @param  array  $where
+     * @return string
+     */
+    protected function whereTime(Builder $query, $where)
+    {
+        return $this->dateBasedWhere('%H:%M:%S', $query, $where);
+    }
+
+    /**
      * Compile a date based where clause.
      *
      * @param  string  $type
@@ -126,11 +138,9 @@ class SQLiteGrammar extends Grammar
      */
     protected function dateBasedWhere($type, Builder $query, $where)
     {
-        $value = str_pad($where['value'], 2, '0', STR_PAD_LEFT);
+        $value = $this->parameter($where['value']);
 
-        $value = $this->parameter($value);
-
-        return "strftime('{$type}', {$this->wrap($where['column'])}) {$where['operator']} {$value}";
+        return "strftime('{$type}', {$this->wrap($where['column'])}) {$where['operator']} cast({$value} as text)";
     }
 
     /**
@@ -154,7 +164,7 @@ class SQLiteGrammar extends Grammar
         // If there is only one record being inserted, we will just use the usual query
         // grammar insert builder because no special syntax is needed for the single
         // row inserts in SQLite. However, if there are multiples, we'll continue.
-        if (count($values) == 1) {
+        if (count($values) === 1) {
             return empty(reset($values))
                     ? "insert into $table default values"
                     : parent::compileInsert($query, reset($values));

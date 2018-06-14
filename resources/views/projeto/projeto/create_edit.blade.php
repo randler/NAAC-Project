@@ -731,7 +731,7 @@
 @endsection
 
     @push('styles')
-      <link rel="stylesheet" href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css">
+    <link rel="stylesheet" href="{{asset('css/ionicons.min.css')}}">
       <link rel="stylesheet" type="text/css" href="{{asset('assets/datepicker/css/daterangepicker.css')}}">
       <link rel="stylesheet" type="text/css" href="{{asset('assets/bootstrap-wizard/css/prettify.css')}}">
     @endpush
@@ -739,7 +739,7 @@
     @push( 'scripts-footer' )
         <!--script src="{{ asset('assets/form-slide/js/form-slide.js') }}"-->
         </script>
-        <script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
+        <script src="{{asset('js/jquery-3.1.1.min.js')}}"></script>
         <script type="text/javascript" src="{{asset('assets/datepicker/js/moment.min.js')}}"></script>
         <script type="text/javascript" src="{{asset('assets/datepicker/js/daterangepicker.js')}}"></script>
         <script type="text/javascript" src="{{asset('assets/datepicker/js/demo.js')}}"></script>

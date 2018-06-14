@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="py-5 text-white opaque-overlay" style="background-image: url(&quot;https://pingendo.github.io/templates/sections/assets/cover_restaurant.jpg&quot;);">
+<div class="py-5 text-white opaque-overlay" style="background-image: url(&quot;{{asset('images/cover_restaurant.jpg')}}&quot;);">
     <div class="container">
       <div class="row text-center">
         <div class="col-md-12"><i class="text-center far fa-5x fa-comments"></i>

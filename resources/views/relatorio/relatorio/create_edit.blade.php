@@ -753,13 +753,12 @@
 
 @endsection
 @push('styles')
-  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.9/css/all.css" integrity="sha384-5SOiIsAziJl6AWe0HWRKTXlfcSHKmYV4RBF18PPJ173Kzn7jzMyFuTtk8JA7QQG1" crossorigin="anonymous">
   <link rel="stylesheet" type="text/css" href="{{asset('assets/datepicker/css/daterangepicker.css')}}">
   <link rel="stylesheet" type="text/css" href="{{asset('assets/bootstrap-wizard/css/prettify.css')}}">
 @endpush
 
 @push('scripts-footer')
-        <script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
+<script src="{{asset('js/jquery-3.1.1.min.js')}}"></script>
         <script type="text/javascript" src="{{asset('assets/datepicker/js/moment.min.js')}}"></script>
         <script type="text/javascript" src="{{asset('assets/datepicker/js/daterangepicker.js')}}"></script>
         <script type="text/javascript" src="{{asset('assets/datepicker/js/demo.js')}}"></script>

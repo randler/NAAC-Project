@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="py-5" style="background-image: url(&quot;https://pingendo.github.io/templates/sections/assets/form_red.jpg&quot;);">
+<div class="py-5" style="background-image: url(&quot;{{asset('images/form_red.jpg')}}&quot;);">
     <div class="container">
       <div class="row">
         <div class="align-self-center col-md-6 text-white">
